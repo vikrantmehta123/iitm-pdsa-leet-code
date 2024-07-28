@@ -110,3 +110,90 @@ class Solution:
 
         return output
 ```
+
+## 3. https://leetcode.com/problems/sort-colors/description/
+This problem is similar to what is discussed in one the practice programming assignments for this week, and we need to solve this problem in $O(n)$ complexity. 
+
+### 3.1 Sort the ```nums``` in place
+We can simply sort the array ```nums``` in place are return it. We can use ```nums.sort()``` for this. But the comlpexity for this will be: $O(n log n)$. Can we do better?
+
+### 3.2 Take Count of Colors 
+We know that there are only three distinct elements in the list. So can we count the occurrences for each distinct color element, and then replace the original array using these counts. 
+For example, consider an array ```nums = [ 2, 0, 2, 1, 1, 0, 1]```. We can keep a dictionary for counts as follows: 
+```
+counts[0] = 2
+counts[1] = 3
+counts[2] = 2
+```
+
+Then for every color, we can replace ```nums[i]``` to ```nums[i + count]``` with the color.
+
+##### Code:
+```
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        counts = { 
+            0 : 0, 
+            1: 0, 
+            2: 0
+        }
+
+        # O(n). Take counts for each color
+        for i in range(len(nums)):
+            counts[nums[i]] += 1
+
+        index = 0
+
+        # O(n). For each color, update the nums[i] to nums[i + count] to the color.
+        for i in range(3):
+            for count in range(counts[i]):
+                nums[index] = i
+                index += 1
+```
+
+
+## 4. https://leetcode.com/problems/merge-intervals/description/
+### 4.1  Sorting intervals
+- If we want to merge intervals, it would be easier if overlapping intervals come adjacently in the input list, which means... Sorting!
+- Sort based on the start of the interval. 
+- For every interval, check whether start of the interval falls within the end of the merged interval
+
+- But we will need to consider the below corner cases:
+    - One interval subsumes another, then what? This means that the second interval's end is smaller than the first. 
+    Such as: [1, 10] and [2, 5]
+    - How do you handle last interval?
+
+We also need to keep track of the start and the end of the merged intervals.
+
+##### Code:
+```
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        if not intervals:
+            return []
+        
+        # Sort intervals based on the start
+        intervals.sort(key=lambda x: x[0])
+        
+        merged_intervals = []
+        current_start, current_end = intervals[0]
+        
+        for interval in intervals[1:]:
+            # Overlapping intervals, merge them
+            if interval[0] <= current_end:
+                current_end = max(current_end, interval[1]) # The max function is required to handle the 1st edge case
+            else:
+                # Non-overlapping interval found, add previous interval to result
+                merged_intervals.append([current_start, current_end])
+
+                # Update current interval
+                current_start, current_end = interval
+        
+        # Add the last interval
+        merged_intervals.append([current_start, current_end])
+        
+        return merged_intervals
+```
