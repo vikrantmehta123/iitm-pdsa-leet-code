@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/57063c27-b51c-4842-9e14-b9ca4dd7dc91)![image](https://github.com/user-attachments/assets/90835e5f-15f1-4718-bd5a-29a110a7167b)# Programming, Data Structures and Algorithms Using Python
+# Programming, Data Structures and Algorithms Using Python
 
 This repository is a comprehensive resource for Leet Code problems. Here, you will find a solution explanations and code implementations for a carefully curated Leet Code problems based on the 
 content of the PDSA Course for IITM BS in Data Science and Applications. 
