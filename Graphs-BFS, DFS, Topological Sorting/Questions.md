@@ -199,8 +199,156 @@ Pseudocode:
 
 ## 5. [Sort Items By Groups Respecting Dependencies](https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/description/)
 
+### 5.1 Using Topological Sort
+We need to list a a sequential order of ```items``` such that the items belonging to the same group are listed next to each other. Each item can have a dependency such that the other item needs to be completed first- as given in the ```beforeItems``` array. It is easy to see that this is a topological ordering problem. 
 
+Take a moment to think about the following:
+Let's say we run topological sort directly on the beforeItems. We may pass some test cases. But what test cases might we fail?
+Whenever we have multiple ```items``` that have zero indegree, then we have to make a choice as to which item should we take first. Let's take an example: 
+```
+group[0] = [1, 2]
+group[1] = [3, 4]
+indegree[1] = 0
+indegree[3] = 0
+indegree[2] = indegree[4] = 1 
 
-## 6. [Word Ladder](https://leetcode.com/problems/word-ladder/description/)
+Assume: 2 needs to be come before 4, and 1 needs to come before 2. 
+1 -> 2 -> 4
+```
 
+Now, the issue will come when we are selecting between the ```items``` 1 and 3. If our algorithm chooses 3, then all the other elements belonging to group 1 should come next to 3- like: 3, 4-, and only then we'll be able to add elements from group 0- like: 3, 4, 1, 2. This violates the condition that ```1 -> 2 -> 4```.
+
+To solve this problem, we need to keep a graph for the ```groups``` as well. Whenever we are choosing which ```item``` to select for the topological order, we need to first check the ```groups``` graph. 
+
+Thus, we keep two graphs- one for ```items``` and one for ```groups```. Then we run a sort of nested topological sort- the outer one for the ```groups``` graph, and the inner one for the ```items``` graph. This will give us the correct solution that respects both the group dependencies and the item dependencies. 
+
+#### Psuedocode:
+1. Since we are going to need to list all elements belonging to a group side by side, we will keep a dictionary of the format: ```group:[all items of that group]``` for easy retrieval.
+
+2. Use ```beforeItems``` array to construct both the graphs- ```groups``` and ```items```. You can use the either an adjacency matrix or an adjacency list representation for this. Here, we are using Adjacency List representation. 
+    - If ```items[i]``` needs to come before ```items[j]```, then add edge from ```i``` to ```j``` for the ```items_graph```. 
+    - Similarly, for the ```group_graph```, add the edge from ```group[i]``` to ```group[j]```, since the item in ```i```th group needs to come before the item in the ```j```th group. 
+
+3. Once you have the graphs, run nested topological sort as mentioned above. 
+
+#### Code:
+```
+# Implementation of Queue
+class Queue:
+    def __init__(self):
+        self.queue = []
+    def enqueue(self,v):
+        self.queue.append(v)
+    def isempty(self):
+        return(self.queue == [])
+    def dequeue(self):
+        v = None
+        if not self.isempty():
+            v = self.queue[0]
+            self.queue = self.queue[1:]
+        return(v)    
+    def __str__(self):
+        return(str(self.queue))
+
+class Solution:
+    # Creates a dictionary that returns all elements of a particular group. Used in the main algorithm when we are listing all the items # that belong to a group side by side
+    def get_group_wise_elements(self, group, m):
+        group_wise_elements = { i:[] for i in range(m) }
+        for i in range(len(group)):
+            grp = group[i] if group[i] >= 0 else -i-1
+            if grp not in group_wise_elements:
+                group_wise_elements[grp] = []
+            group_wise_elements[grp].append(i)
+        return group_wise_elements
+
+    # Convert the problem into two graphs- group_graph and items_graph. Along with it, return indegrees for each node in both the graphs. 
+    def preprocessing(self, beforeItems, group, m, n, groupwise_items):
+        group_indegree, items_indegree = {}, {i:0 for i in range(n)}
+        items_alist =  {i:[] for i in range(n)}
+        group_alist = {}
+
+        for key in groupwise_items:
+            group_alist[key] = set()
+            group_indegree[key] = 0
+ 
+        for i in range(len(beforeItems)):
+            before = beforeItems[i]
+            for num in before:
+                if num not in items_alist:
+                    items_alist[num] = [ ]
+                items_alist[num].append(i)
+                items_indegree[i] += 1
+
+                grp_num = group[num] if group[num] >= 0 else -num-1
+                grp_i = group[i] if group[i] >= 0 else -i-1  
+                if grp_num != grp_i:
+                    if grp_num not in group_alist:
+                        group_alist[grp_num] = set()
+                    group_alist[grp_num].add(grp_i)
+        
+        for key in group_alist.keys():
+            group_alist[key] = list(group_alist[key])
+
+        for u in group_alist.keys():
+            for v in group_alist[u]:
+                if v not in group_indegree:
+                    group_indegree[v] = 0
+                group_indegree[v] += 1
+
+        return items_alist, group_alist, items_indegree, group_indegree
+
+    # Run the actual nested topological sorting algorithm
+    def lpath(self, items_alist, group_alist, items_indegree, group_indegree, groupwise_items, n, group):
+        output = [ ]
+
+        grp_queue = Queue()
+        items_queue = Queue()
+
+        for grp in group_indegree:
+            if group_indegree[grp] == 0:
+                grp_queue.enqueue(grp)
+
+        # Outer topological sort is for groups
+        while not grp_queue.isempty():
+            curr_grp = grp_queue.dequeue()
+            group_indegree[curr_grp] -= 1
+            for adj_grp in group_alist[curr_grp]:
+                # Reduce the indegree of each adjacent group of the removed vertex by 1
+                group_indegree[adj_grp] -= 1
+
+                # If after reducing the degree of adjacent group, it becomes zero then insert it into the group queue
+                if group_indegree[adj_grp] == 0 :
+                    grp_queue.enqueue(adj_grp)
+
+            for i in groupwise_items[curr_grp]:
+                if items_indegree[i] == 0 :
+                    items_queue.enqueue(i)
+
+            # Inner topological sort is for the items
+            while (not items_queue.isempty()):
+
+                # Remove one vertex from items queue which have zero degree items and reduce the indegree by 1
+                curr_vertex = items_queue.dequeue()
+                output.append(curr_vertex)
+                items_indegree[curr_vertex] = items_indegree[curr_vertex] - 1
+                
+                # Repeat for each adjacent of the removed item 
+                for adj_vertex in items_alist[curr_vertex]:
+                    # Reduce the indegree of each adjacent of the removed item by 1
+                    items_indegree[adj_vertex] = items_indegree[adj_vertex] - 1
+
+                    # If after reducing the degree of adjacent item, it becomes zero then insert it into the items queue
+                    if items_indegree[adj_vertex] == 0 and group[adj_vertex] == curr_grp:
+                        items_queue.enqueue(adj_vertex)
+
+        if len(output) != n: return []
+        return output
+
+    def sortItems(self, n: int, m: int, group: List[int], beforeItems: List[List[int]]) -> List[int]:
+        group_wise_items = self.get_group_wise_elements(group, m)
+
+        items_alist, group_alist, items_indegree, group_indegree = self.preprocessing(beforeItems,group, m, n, group_wise_items)
+        
+        return self.lpath(items_alist, group_alist, items_indegree, group_indegree, group_wise_items, n, group)
+```
 
