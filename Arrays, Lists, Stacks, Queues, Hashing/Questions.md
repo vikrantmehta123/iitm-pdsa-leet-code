@@ -227,3 +227,105 @@ class Solution:
         return head
 ```
 
+## 6. [Middle of The Linked List](https://leetcode.com/problems/middle-of-the-linked-list/description/)
+### 6.1 Using Iteration
+How do we find the middle element in an array? We compute the middle as: ```mid = len(L) // 2``` and then return ```L[mid]```.
+
+Can you find out a similar approach in linked lists?
+
+First, we iterate over the entire list to get the length of the linked list. 
+Then, we compute the middle index. 
+Lastly, we can iterate ```mid``` number of nodes to reach the middle node and return it. 
+
+- Time Complexity: $O(n)$
+#### Code:
+```
+class Solution:
+    def get_length(self, head):
+        """
+        Helper function- iterates over the entire linked list and returns the length of the list
+        """
+        counter = 0
+        while head:
+            counter += 1
+            head = head.next
+        return counter
+
+
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        # Handle the base case
+        if not head:
+            return 
+
+        # Compute the middle index 
+        n = self.get_length(head)
+        mid = n // 2
+
+        # Iterate mid number of steps
+        i = 0
+        while i < mid: 
+            head = head.next # note that we are updating the head. So after "mid" iterations, head = middle node
+            i+=1
+        
+        # Since head = mid after iterating, we return head
+        return head
+```
+
+## 7. [Delete the Middle Node](https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/description/)
+### 7.1 Using Iteration
+
+From our discussion above, we know how to reach the middle node. 
+
+Since we know how to reach the middle node, can you find out a way to delete that node?
+
+- In a linked list, if we want to delete a node, we need to do the following:
+    - Stop at the node before. 
+    - Mark the node's next pointer as pointing to the next to next node. i.e. ```current.next = current.next.next```
+
+- Corner Cases:
+    - What if there is no node after the middle node? For instance, the linked list has only one node. 
+    - In that case, we need to first check whether ```current.next.next``` pointer exists or not.
+
+- Time Complexity: $O(n)$
+#### Code:
+```
+class Solution:
+    def get_length(self, head):
+        """
+        Helper function- iterates over the entire linked list and returns the length of the list
+        """
+        counter = 0
+        while head:
+            counter += 1
+            head = head.next
+        return counter
+
+    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        mid = self.get_length(head) // 2
+        
+        current = head # Iterate using current because we want to return the head
+
+        i = 0
+        # Stopping one node before the middle node
+        while i < mid - 1:
+            current = current.next
+            i += 1
+        
+        # Change links of the node before to the next to next node by handling corner case
+        if current.next and current.next.next:
+            current.next = current.next.next
+        else:
+            current.next = None
+        return head
+```
+
+## 8. [Delete nth Node From End](https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/)
+### 8.1 Using Iteration
+This problem is very similar to the problem of deleting middle node.
+
+Observe that deleting the ```nth``` node from the end is the same as deleting ```(length - n)th``` node from the start. 
+
+We can use a similar approach as we used in the above question to figure out the solution to this. 
+
+
+## 9. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)

@@ -74,3 +74,61 @@ class Solution:
         
         return maximum_amount[-1]
 ```
+
+## 3. [Fibonacci Numbers](https://leetcode.com/problems/fibonacci-number/description/)
+### 3.1 Using Dynamic Programming
+
+Let's begin by thinking about the problem. We need to calculate the Fibonacci number $F(n) $ for a given $n$. The Fibonacci sequence is defined as:
+
+- $ F(0) = 0$
+- $F(1) = 1$
+- $F(n) = F(n-1) + F(n-2) \text{ for } n > 1$
+
+Consider what this means. $F(n)$ is the sum of the two preceding numbers in the sequence. This suggests that if we know $F(n-1)$ and $F(n-2)$, we can find $F(n) $.
+
+But how do we approach calculating $F(n)$?
+
+First, think about the simplest cases, $F(0)$ and $F(1)$. These are our base cases because they are defined directly without requiring any further calculations.
+
+Now, if $n = 2$, we use the formula $F(2) = F(1) + F(0)$. Since we already know $F(1) = 1 $ and $ F(0) = 0$, we can easily calculate $F(2) = 1 + 0 = 1 $.
+
+What if $n = 3$? Again, using the formula, $F(3) = F(2) + F(1) $. From the previous steps, we know $ F(2) = 1 $ and $F(1) = 1 $, so $F(3) = 1 + 1 = 2 $.
+
+Notice that each time we calculate a Fibonacci number, we rely on the results of previous calculations. 
+
+Now, let’s consider a general approach. If we want to calculate $F(n) $, how can we systematically work our way up from the base cases to $F(n) $?
+
+One way is to use **recursion**. We can define a function that calls itself with smaller values of $  n $ until it reaches the base cases. However, while recursion is elegant, it has a downside—repeatedly solving the same subproblems, which leads to inefficiency.
+
+Can we improve this?
+
+Yes, we can! Instead of recalculating the same Fibonacci numbers multiple times, we can **store** the results of each calculation and reuse them when needed.
+
+So here's the approach that we will take:
+- We will define an array named ```fibtable```, where ```fibtable[i]``` is the ```ith``` number in the fibonacci sequence. 
+- Observe this relationship: ```fibtable[i] = fibtable[i - 1] + fibtable[i - 2]```
+- Once we hardcode the base cases, we can iterate over the ```i``` upto ```n```, and update the ```fibtable[i]``` as per the above update condition. 
+
+
+#### Code:
+```
+class Solution:
+    def fib(self, n: int) -> int:
+        # Initialize the fibtable array to be all zeros
+        fibtable = [0] * (n + 1)
+
+        # Base Case 1: Where n == 0
+        if n == 0: return fibtable[0]
+
+        # Base Case 2: Where n == 1
+        fibtable[1] = 1
+
+        for i in range(2, n + 1):
+            #F(n) = F(n - 1) + F(n - 2)
+            fibtable[i] = fibtable[i - 1] + fibtable[i - 2]
+        
+        # fibtable[i] is the ith fibonacci number. Thus, to get nth fibonacci number, return fibtable[n]
+        return fibtable[n]
+```
+
+## 4. [Triangle](https://leetcode.com/problems/triangle/description/)
