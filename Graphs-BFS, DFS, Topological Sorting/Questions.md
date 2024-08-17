@@ -352,3 +352,117 @@ class Solution:
         return self.lpath(items_alist, group_alist, items_indegree, group_indegree, group_wise_items, n, group)
 ```
 
+
+## 6. [Find If Path Exists](https://leetcode.com/problems/find-if-path-exists-in-graph/description/)
+### 6.1 Using BFS
+
+What is the question asking you to do?
+- We need to find out whether we can reach a particular destination from the given source node. That is, it's a reachability problem. 
+
+Can you convert the given ```edges``` list into an adjacency list or an adjacency matrix representation?
+- Each ```edges[i] = [u_i, v_i]``` represents a bidirectional edge, which means there is an edge from ```u``` to ```v```, and ```v``` to ```u```. 
+- So we can iterate over the entire ```edges``` array, and add the two edges for every ```edges[i]```. Here's the code snippet for converting the ```edges``` array into an adjacency list:
+```
+for u, v in edges:
+    adj_list[u].append(v)
+    adj_list[v].append(u)
+```
+
+Once we have the adjacency list, which algorithm will give us whether we can reach ```destination``` from the ```source```?
+- We can use either BFS or DFS. For this solution, we are using BFS. 
+
+#### Code:
+Note: For a better, more concise code, we have used the ```deque``` data structure from the ```collections``` module in Python. We can use it to implement a ```queue``` used in BFS. 
+
+```
+from collections import deque
+
+class Solution:
+    def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+        adj_list = { i:[ ] for i in range(n) }
+        visited = set()
+        for u, v in edges:
+            adj_list[u].append(v)
+            adj_list[v].append(u)
+
+        queue = deque([source])
+        visited.add(source)
+        while queue:
+            vertex = queue.popleft()
+            if vertex == destination:
+                return True
+            for neighbor in adj_list[vertex]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+                    visited.add(neighbor)
+        return False
+```
+
+## 7. [Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
+
+### 7.1 Using BFS
+We are given a matrix ```isConnected```, whose ```[i][j]```th entry tells us whether there is an undirected edge from ```i``` to ```j```. We can interpret this ```isConnected``` matrix as an adjacency matrix. 
+
+A province is a set of vertices that are connected to each other. We are asked to find the number of provinces from the matrix. 
+
+Can you identify the type of the problem?
+- The problem is about finding the number of connected components from the graph. 
+
+Can you identify which algorithm we can use to solve this problem?
+- We can use BFS or DFS to solve this problem. For this solution, we will use BFS. 
+
+#### Code:
+```
+from collections import deque
+
+class Solution:
+    def get_neighbors(self, AMat, vertex):
+        """Given an adjacency matrix and a vertex, returns all neighbors for that vertex"""
+        neighbors = []
+        for i in range(len(AMat)):
+            if AMat[vertex][i] == 1:
+                neighbors.append(i)
+        return neighbors
+
+    def BFS(self, AMat, source):
+        """
+        Runs BFS from a given source vertex and returns the set of vertices visited in that run of BFS.
+        That is, each run of the BFS will give us one province, or one connected component.
+        """
+        visited = set()
+        queue = deque([source])  # Initialize the queue with the source vertex
+        visited.add(source)
+        while queue:
+            vertex = queue.popleft()
+            neighbors = self.get_neighbors(AMat, vertex)  # Pass both AMat and vertex
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+                    visited.add(neighbor)
+        return visited
+
+    def findCircleNum(self, isConnected):
+
+        # Initially, every vertex gets an invalid component number
+        components = {i: -1 for i in range(len(isConnected))}
+
+        # Keep track of the component number and the number of vertices already visited across BFS runs
+        component_number = 0
+        seen = 0
+        
+        while seen < len(isConnected):
+            startv = min([i for i in range(len(isConnected)) if components[i] == -1])
+            visited = self.BFS(isConnected, startv)
+
+            # For every vertex that was visited in the current run of BFS, update its component number and update 
+            # the number of vertices seen.
+            for v in visited:
+                components[v] = component_number
+                seen += 1
+
+            # Increment component number such that for the next run of BFS, 
+            # a different component number will be assigned
+            component_number += 1
+            
+        return component_number 
+```
