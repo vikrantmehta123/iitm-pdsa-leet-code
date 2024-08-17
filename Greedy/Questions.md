@@ -152,5 +152,4 @@ class Solution:
                     break
         
         return jump_count
-
 ```
