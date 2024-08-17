@@ -42,18 +42,26 @@ class Solution:
 ```
 
 
-## 2 [Network Delay Time](https://leetcode.com/problems/network-delay-time/description/)
 
-### 1.2 Using Graphs and Heaps
+## 2. [Network Delay Time](https://leetcode.com/problems/network-delay-time/description/)
 
-We're asked to find out the minimum time it takes for the signal to reach all the nodes. Can you find out what type of algorithm do we need to use here?
+### 2.1 Using Dijkstra
+We are given an array ```times``` where ```times[i] = [u_i, v_i, w_i]```, where ```u_i``` is the source node, ```v_i``` is the destination and ```w_i``` is the weight of that edge. It is clear that this is a directed graph. 
 
-It's... shortest path algorithm! 
+Can you convert the ```times``` array into a more graph suited representation like an adjacency list or an adjacency matrix?
+- Here's the code snippet that can accomplish this:
+```
+WList = { i:[] for i in range(1, n+1) }
+visited = {i : False for i in range(1, n+1)}
+for u, v, w in times:
+    WList[u].append((v, w))
+```
 
-The minimum time to reach all the nodes, is the time it takes to reach the node that gets visited last. That is, the maximum of all the visited vertices is our answer. So we can use any of the algorithms used in the previous week. But let's try to make use of heaps to efficiently solve Dijkstra's algorithm. 
+The question is asking us to find out the minimum time it will take for the signal to reach all nodes if started from the node ```k```. Can you identify what type of a problem this is?
+- It is a shortest path problem. Since time will be non-negative, we can use Dijkstra here. 
 
-- Instead of a queue, we can keep a minimum heap that returns the node with the minimum expected distance in $O(log(n))$ time. 
-- Run Dijkstra as before. 
+Observe the following:
+- The minimum time taken to reach all vertices is the same as the minimum time it would take to "burn" the last reached vertex when using Dijkstra. This is the same as the maximum shortest path after running Dijkstra. 
 
 #### Code:
 ```
@@ -66,41 +74,39 @@ class Solution:
         visited = {i : False for i in range(1, n+1)}
         for u, v, w in times:
             WList[u].append((v, w))
-        
-        dist = {node: float('inf') for node in range(1, n+1)} # Initialize distance to infinity
-        dist[k] = 0 # Starting node
-        
-        # Priority queue
-        heap = [(0, k)]  # Heap is of the format: (distance, node)
-        
-        while heap:
-            # By default, heapq.heappop(heap) returns the minimum element from heap
-            current_dist, node = heapq.heappop(heap) 
 
+
+        # Run Dijkstra on it
+        dist = {node: float('inf') for node in range(1, n+1)}
+        dist[k] = 0
+
+        # Priority queue
+        heap = [(0, k)]  # (distance, node)
+
+        while heap:
+            current_dist, node = heapq.heappop(heap) # By default, heapq.heappop(heap) returns the minimum element from heap
             visited[node] = True
             if current_dist > dist[node]:
                 continue
-            
+
             for neighbor, weight in WList[node]:
-                if visited[neighbor]: 
+                if visited[neighbor]:
                     continue
                 distance = current_dist + weight
-
-                # Insert the neighbor in the heap if distance is smaller
                 if distance < dist[neighbor]:
                     dist[neighbor] = distance
                     heapq.heappush(heap, (distance, neighbor))
 
-        # The maximum distance is the minimum time it takes to reach all vertices
+        # The minimum time taken for the signal to reach all the vertices, is the same as the last vertex to get "burnt" in Dijkstra's algorithm, which is the same as
+        # maximum of shortest distance values
         max_dist = max(dist.values())
-
-        # Handle the case where all the vertices cannot be reached.
-        return max_dist if max_dist != float('inf') else -1
+        return max_dist if max_dist != float('inf') else -1 # Check if all nodes can be reached or not.
 ```
+
 
 ## 3 [Maximum Spending After Buying Items](https://leetcode.com/problems/maximum-spending-after-buying-items/description/)
 
-### 1.3 Brute Force
+### 3.1 Brute Force
 
 
 We are given an $m \times n$ matrix, and we can take out values only from the right end of each row. Further, the ammount spent on a day is defined as ```day number * value of the product```. 
@@ -141,7 +147,7 @@ class Solution:
         return max_spending
 ```
 
-### 1.4 Using Minheaps
+### 3.2 Using Minheaps
 
 We still need to find the minimum of the rightmost elements and add it to the counter. Can you think of a data structure that lets us efficiently remove the minimum element? Minheaps can be used. 
 
