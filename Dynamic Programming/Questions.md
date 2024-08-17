@@ -132,3 +132,40 @@ class Solution:
 ```
 
 ## 4. [Triangle](https://leetcode.com/problems/triangle/description/)
+
+### 4.1 Using Dynamic Programming
+
+The question is asking for us to find the minimum path sum from the top to the bottom of the triangle, where each step can be to only the ```ith``` or ```i + 1 th``` cell in the row below. 
+
+Can you break this problem into further subproblems?
+- If we start from the topmost cell of the triangle in the test case 1, the minimum path sum could be described using the following structure:
+$MPS(2) = 2 + min(MPS(3), MPS(4))$, where $MPS(x) $ tells us the minimum path sum starting from a particular cell in the triangle. More generally, 
+$MPS(triangle[row][col]) = triangle[row][col]+ min(MPS(triangle[row + 1][col]), MPS(triangle[row + 1][col + 1]))$
+
+Can you identify the base cases here?
+- The base cases are all the leaf nodes of the triangle where there are no more children. 
+
+Since we are solving subproblems and then combining those subproblems to solve the original problem, we can use dynamic programming here. Further, using bottom-up approach here might be better than using the top-down approach. 
+
+After processing the last row, that is- the row of the base cases, we can move one level up in the triangle. After processing that level, we get a minimum path of length 2 for each of the cells in the second last row. More generally, after processing a row, each element in that row would hold the minimum path sum from that element to the bottom of the triangle. After processing the entire triangle, the top element of the triangle would hold the minimum path sum from the top to the bottom of the triangle, which is the answer to the problem.
+
+Here's how we can approach the pseudocode:
+- Start with the second last row. ( We don't need to start from the last row, as the last row is the base case and it will return values just the same as what are there in the cells)
+- Then for every cell of that row, we apply the following update rule:
+$$MPS(triangle[row][col]) = triangle[row][col]+ min(MPS(triangle[row + 1][col]), MPS(triangle[row + 1][col + 1]))$$
+- Repeat the same for every row till you reach the topmost row. 
+- Return the value from the cell at the top- first cell of the first row. 
+
+```
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        # Start from the second-to-last row of the triangle
+        for row in range(len(triangle) - 2, -1, -1):
+            for col in range(len(triangle[row])):
+                # Update the current element with the sum of the element itself
+                # and the minimum of the two adjacent elements in the row below
+                triangle[row][col] = triangle[row][col] +  min(triangle[row + 1][col], triangle[row + 1][col + 1])
+
+        # The top element now contains the minimum path sum
+        return triangle[0][0]
+```
