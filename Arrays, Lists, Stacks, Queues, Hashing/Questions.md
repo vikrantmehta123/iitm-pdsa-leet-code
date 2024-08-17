@@ -329,3 +329,34 @@ We can use a similar approach as we used in the above question to figure out the
 
 
 ## 9. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)
+
+This problem is very similar to the ```merge(A, B)``` operation from the merge sort. Except, it is applied to Linked Lists instead of arrays. 
+
+#### Code:
+```
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+
+        # Dummy node to serve as a proxy for head of the list to return      
+        dummy = ListNode()
+        current = dummy
+
+        # Iterate as long as neither list is exhausted
+        while list1 and list2:
+            if list1.val < list2.val:
+                current.next = list1
+                list1 = list1.next
+            else:
+                current.next = list2
+                list2 = list2.next
+            current = current.next
+
+        # Attach the remaining nodes of list1 or list2
+        if list1:
+            current.next = list1
+        elif list2:
+            current.next = list2
+
+        # The merged list is next to the dummy node
+        return dummy.next
+```
