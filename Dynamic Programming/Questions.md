@@ -169,3 +169,47 @@ class Solution:
         # The top element now contains the minimum path sum
         return triangle[0][0]
 ```
+
+## 5. [Coin Change](https://leetcode.com/problems/coin-change/description/)
+### 5.1 Using Dynamic Programming
+
+The first thought here can be that we need to use the greedy strategy. But as we can see from the test cases, the greedy strategy won't always give us the optimal solution. 
+
+Can you try to break this problem down into subproblems and identify if there are overlapping subproblems?
+- We can observe that for a given amount, the minimum number of coins needed to get to that amount is one plus the minimum number of coins required to get $amount - coin$. Concisely, we can write this as:
+    - $mincoins(amount) = mincoins(amount - coin) + 1$
+- If you expand the subproblems for every coin in the given test case, you can observe that the subproblems overlap. 
+
+How can you use dynamic programming to solve this problem?
+- Since we know the subproblem structure, we can use memoization. 
+- Keep an array of length $amount + 1$, where each index ```i``` stores the minimum number of coins required to get change for amount ```i```. Let this array be called ```dp```.
+- Initially this array will be set to infinity. 
+- For each element, we will update the value as: 
+    - ```dp[i] = min(dp[i], dp[i - coin] + 1)```
+    - We will do this for every amount in ```range(0, amount + 1)```, and we will do this for every ```coin``` in the ```coins``` array.
+
+What can be the base cases here?
+- To get to amount $0$, we need $0$ coins. Thus, ```dp[0] = 0```. 
+- Further, for every coin in the given coins array, ```dp[coin] = 1```, as one coin will suffice to get to that amount. 
+
+#### Code:
+```
+class Solution:
+    def coinChange(self, coins, amount):
+        # Initialize a dp array where dp[i] will hold the minimum number of coins required for amount i
+        dp = [float('inf')] * (amount + 1)
+        
+        # Base case: No coins are needed to make amount 0
+        dp[0] = 0
+
+        for coin in coins:
+            dp[coin] = 1
+        
+        # Fill the dp array
+        for coin in coins:
+            for x in range(coin, amount + 1):
+                dp[x] = min(dp[x], dp[x - coin] + 1)
+        
+        # If dp[amount] is still inf, it means it's not possible to make that amount with given coins
+        return dp[amount] if dp[amount] != float('inf') else -1
+```
