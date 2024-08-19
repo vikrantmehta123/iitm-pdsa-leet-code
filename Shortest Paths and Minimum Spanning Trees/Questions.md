@@ -1,5 +1,8 @@
 # Leet Code Problems on Shortest Path and Minimum Cost Spanning Trees
 
+##### 1. [Min Cost To Connect All Points](#1-min-cost-to-connect-all-points-1)
+##### 2. [Cheapest Flight Within K Stops](#2-cheapest-flight-within-k-stops-1)
+
 ## 1. [Min Cost To Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/description/)
 
 ### 1.1 Minimum Cost Spanning Trees
@@ -65,3 +68,4 @@ class Solution:
 
 ## 2. [Cheapest Flight Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
 
+### 2.1 Using Bellman-Ford

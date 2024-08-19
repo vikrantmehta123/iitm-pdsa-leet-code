@@ -1,5 +1,10 @@
 # Problems on Sorting and Searching
 
+##### 1. [Longest Subsequence With Limited Sum](#1-longest-subsequence-with-limited-sum-1)
+##### 2. [Top K Frequent Elements](#2-top-k-frequent-elements-1)
+##### 3. [Sort Colors](#3-sort-colors-1)
+##### 4. [Merge Intervals](#4-merge-intervals-1)
+
 ## 1. [Longest Subsequence With Limited Sum](https://leetcode.com/problems/longest-subsequence-with-limited-sum/description/)
 
 ### 1.1: Brute Force
@@ -41,7 +46,7 @@ class Solution(object):
 - Sort the list first. 
 - Keep a ```prefix_sum``` array that has this interpretation: ```i```th index stores the sum of first ```i``` smallest elements. Note that this array will be sorted.
 - For each ```queries[i]```, use binary search on ```prefix_sum``` to find out the largest element less than equal to ```queries[i]```
-- Complexity: $O(nlogn)
+- Complexity: $O(nlogn)$
 ##### Code:
 ```
 class Solution:
@@ -111,7 +116,7 @@ class Solution:
         return output
 ```
 
-## 3. https://leetcode.com/problems/sort-colors/description/
+## 3. [Sort Colors](https://leetcode.com/problems/sort-colors/description/)
 This problem is similar to what is discussed in one the practice programming assignments for this week, and we need to solve this problem in $O(n)$ complexity. 
 
 ### 3.1 Sort the ```nums``` in place
@@ -155,7 +160,7 @@ class Solution:
 ```
 
 
-## 4. https://leetcode.com/problems/merge-intervals/description/
+## 4. [Merge Intervals](https://leetcode.com/problems/merge-intervals/description/)
 ### 4.1  Sorting intervals
 - If we want to merge intervals, it would be easier if overlapping intervals come adjacently in the input list, which means... Sorting!
 - Sort based on the start of the interval. 

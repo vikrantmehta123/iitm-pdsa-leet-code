@@ -1,5 +1,15 @@
 # Leet Code Problems on Arrays, Lists, Stacks, Queues, and Hashing
 
+##### 1. [Valid Parentheses](#1-valid-parentheses-1)
+##### 2. [Longest Consecutive Sequence](#2-longest-consecutive-sequence-1)
+##### 3. [Rotate List](#3-rotate-list-1)
+##### 4. [Swap Nodes in Pairs](#4-swap-nodes-in-pairs-1)
+##### 5. [Reverse Nodes in K Groups](#5-reverse-nodes-in-k-groups-1)
+##### 6. [Middle of The Linked List](#6-middle-of-the-linked-list-1)
+##### 7. [Delete the Middle Node](#7-delete-the-middle-node-1)
+##### 8. [Delete nth Node From End](#8-delete-nth-node-from-end-1)
+##### 9. [Merge Two Sorted Lists](#9-merge-two-sorted-lists-1)
+
 ## 1. [Valid Parentheses](https://leetcode.com/problems/valid-parentheses/description/)
 
 ### 1.1 Using Stacks

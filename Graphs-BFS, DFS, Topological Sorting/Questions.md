@@ -1,5 +1,13 @@
 # Leet Code Problems on Graph Algorithms
 
+##### 1. [Find the Town Judge](#1-find-the-town-judge-1)
+##### 2. [Course Schedule-I](#2-course-schedule-i)
+##### 3. [Course Schedule-II](#3-course-schedule-ii-1)
+##### 4. [Snakes and Ladders](#4-snakes-and-ladders-1)
+##### 5. [Sort Items By Groups Respecting Dependencies](#5-sort-items-by-groups-respecting-dependencies-1)
+##### 6. [Find If Path Exists](#6-find-if-path-exists-1)
+##### 7. [Number of Provinces](#7-number-of-provinces-1)
+
 ## 1. [Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/description/)
 
 ### 1.1 By Counting Indegrees

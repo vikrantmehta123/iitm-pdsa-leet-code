@@ -1,5 +1,9 @@
 # Leet Code Problems on Heaps and Trees
 
+##### 1. [Validate Binary Search Tree](#1-validate-binary-search-tree-1)
+##### 2. [Network Delay Time](#2-network-delay-time-1)
+##### 3. [Maximum Spending After Buying Items](#3-maximum-spending-after-buying-items-1)
+
 ## 1. [Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/description/)
 
 ### 1.1 Using Inorder Traversal

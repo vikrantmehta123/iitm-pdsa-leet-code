@@ -1,8 +1,14 @@
 # Problems on Greedy Algorithms
 
+##### 1. [N Meetings in One Room](#1-n-meetings-in-one-room-1)
+##### 2. [Activity Selection](#2-activity-selection-1)
+##### 3. [Minimum Number of Coins](#3-minimum-number-of-coins-1)
+##### 4. [Jump Game](#4-jump-game-1)
+##### 5. [Jump Game-II](#5-jump-game-ii-1)
+
 ## 1. [N Meetings in One Room](https://www.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1)
 
-### Using Greedy Approach
+### 1.1 Using Greedy Approach
 The question is asking us to find out the maximum number of meetings that could be scheduled without conflicts given two arrays- ```start``` and ```end```. 
 
 Can you find out what type of problem this is?
@@ -44,6 +50,7 @@ class Solution:
 
 ## 2. [Activity Selection](https://www.geeksforgeeks.org/problems/activity-selection-1587115620/1)
 
+### 2.1 Greedy Approach
 Same approach as the above question. 
 
 #### Code:
@@ -73,6 +80,8 @@ class Solution:
 
 ## 3. [Minimum Number of Coins](https://www.geeksforgeeks.org/problems/-minimum-number-of-coins4426/1)
 
+### 3.1 Using Greedy
+
 Note: In general, we cannot guarantee that greedy algorithm will produce correct output. However, in the case of this question, we can use greedy approach. Because the number of smaller denominations is bounded by the fact that we can use larger denominations to represent the smaller denominations. For example, the number of coins of denomination 2 cannot be more than 2, because if their number is 3, then we can replace it with one coin of denomination 5 and one coin of denomination 1. That is, with fewer coins of larger denomination, we can represent more coins of lower denomination. 
 
 Thus, we can choose a greedy approach:
@@ -96,7 +105,7 @@ class Solution:
 
 ## 4. [Jump Game](https://leetcode.com/problems/jump-game/description/)
 
-### Using Greedy Approach
+### 4.1 Using Greedy Approach
 
 The question is asking us to find out whether the last index can be reached or not using the given ```nums``` array. ```nums[i]``` corresponds to the maximum jump we can take from the ```ith``` index. We can solve this problem using the Greedy Approach. 
 
@@ -126,6 +135,7 @@ class Solution:
 
 ## 5 [Jump Game-II](https://leetcode.com/problems/jump-game-ii/)
 
+### Using Greedy Approach
 
 #### Code:
 ```
