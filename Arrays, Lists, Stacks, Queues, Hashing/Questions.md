@@ -1,4 +1,4 @@
-# Leet Code Problems on Arrays, Lists, Stacks, Queues, and Hashing
+# Leet Code Problems on Arrays, Stacks and Hashing
 
 ##### 📋 Table of Contents:
 ##### 1. [Valid Parentheses](#1-valid-parentheses-1)
@@ -17,21 +17,17 @@
 
 🔍 Problem Understanding:
 
-There are only three types of brackets: ```[], (), {}```.
-We need to close the last opened bracket first. This implies a Last In, First Out (LIFO) system. Can you think of the appropriate data structure here?
-Since LIFO behavior is required, a stack is perfect for tracking the parentheses. As we encounter opening parentheses, we add them to the stack. When we see a closing bracket, we remove (pop) the last added one.
+We only have three types of brackets: ```[], (), {}```. And we need to close the last opened bracaket first. What do you do when you need to close the last opened bracket first? You need a system where the last thing you add is the first thing you take out, right? This is the Last In, First Out (LIFO) system. So, what data structure works best for LIFO? A **stack**! A stack can help us keep track of the brackets. Whenever we find an opening bracket, we push it onto the stack. When we encounter a closing bracket, we pop the stack to see if it matches the last opened bracket.
 
 🤔 Think about this:
 
-Imagine you've processed the first two characters of the string and added them to the stack. Your stack might look like this: stack = ['(', '{']. Now, suppose the next character is }. How do you check if this closing bracket matches the last opened one?
-We can maintain a mapping like this: \
-```closing bracket : its corresponding opening bracket```. This allows us to verify that each closing bracket properly matches its corresponding opening one.
+Let’s say you’ve read the first two characters of a string and added them to the stack. Your stack might look like this: stack = ['(', '{']. Now, what if the next character is }? How do you know if this closing bracket matches the last opened one? To figure this out, we can use a simple mapping: each closing bracket corresponds to its opening bracket, like this: ```closing bracket : Corresponding opening bracket```. This way, we can check if every closing bracket matches the correct opening one.
 
 ⚠️ Edge Cases:
 
-What if there are opening brackets left in the stack, but no more characters in the string? Or vice versa—what if there are closing brackets in the string, but no opening ones left in the stack?
+What happens if you have opening brackets left in the stack, but the string ends? Or what if there are closing brackets, but the stack is empty? How would you handle these situations?
 
-Time Complexity: $O(n)$
+Time Complexity: $O(n)$\
 Space Complexity: $O(n)$
 
 #### 💻 Code Implementation::
@@ -70,25 +66,29 @@ class Solution:
 ## 2. [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/description/)
 
 ### 2.1 Brute Force
-- For every element, iterate over the array to check if the next element exists in the array. Keep doing this as long as the next element is found.
-- Keep a counter for each sequence, and track the maximum.
-- Time Complexity: $O(n^2)$. But we are told to find an $O(n)$ solution!
+
+Can you think of a brute force way to solve this problem?
+You would look at each number and then search the entire array to see if the next number exists. You would do this for each element in the array, and keep track of the longest one. 
+
+But what’s the problem with this approach? It takes a lot of time—specifically, the time complexity is $O(n^2)$. But we’re asked to find a solution that’s faster, with a time complexity of $O(n)$.
 
 ### 2.2 Improved Approach Using Sets
 
 🧠 Deep Dive:
 
-In the brute-force approach, we had to iterate through the entire unsorted array to check if the next element existed. Is there a way to optimize this check?
-**Hint**: Consider using a data structure that allows constant-time lookups. 
+When using brute force, we had to search the entire array to check if the next number existed. Do you think there’s a way to speed up this check? What if we had a data structure that allows us to check if a number exists in constant time?
 
-We can use **set** data structure to serve this purpose!
+**Hint**: Think of a data structure that has constant-time lookups. 
 
-How would you solve this using sets?
-- For each number, while the next consecutive number exists, keep counting.
-- However, if we use this method directly, some numbers may be checked more than once, leading to $O(n^2)$ time complexity. Can we do better?
+We can use a **set** here!
+
+So, how can we solve this using sets?
+
+- For each number, while the next consecutive number exists, we keep counting.
+- But wait! If we use this method directly, some numbers might get checked more than once, which still gives us $O(n^2)$ time. How can we improve this?
 
 Which numbers can start a consecutive sequence?
-- Only those numbers ```n``` where ```n-1``` is not in the set. Only these numbers can be the starting points of the longest consecutive sequence. Can you see why?
+- Only those numbers ```n``` where ```n-1``` is not in the set. Only these numbers can be the starting points of the longest consecutive sequence. Do you see why?
 - By finding these starting points, we can run our loop efficiently on only these elements.
 - Time Complexity: $O(n)$
 - Space Complexity: $O(n)$
@@ -123,6 +123,11 @@ class Solution:
         return max_length
 ```
 
+# Leet Code Problems on Linked Lists and Arrays
+Before you jump into these problems, read this:
+1. When solving Linked List problems, **ALWAYS** draw the diagrams. 
+2. Whenever you see a Linked List problem, the first thing that you should do is: handle the base / edge cases like an empty linked list or a list with just one node. It'll save you a lot of time and stress, especially during the OPPE!
+
 ## 3. [Rotate List](https://leetcode.com/problems/rotate-list/description/)
 ### 3.1 🔄 Rotation Logic:
 - If $k \gt n$, then the number of effective rotations is: $k = k \mod n$. 
@@ -131,7 +136,7 @@ class Solution:
     2. Next, connect the original list's tail to its ```head```to create a cycle in the linked list.
     3. Finally, walk from the ```newhead``` for ```n``` nodes to find the ```newtail```, which will become the tail of the rotated list by marking its next pointer as None.
 
-#### 💻 Code Implementation::
+#### 💻 Code Implementation:
 ```
 class Solution:
     # Gets the length of node: 'n'
@@ -193,12 +198,64 @@ class Solution:
 ```
 
 ## 4. [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/description/)
+### 4.1 Intuition
+
+Let’s break this problem down step by step with the help of an image. Imagine we have a linked list, and we want to swap every two nodes. To make this easier, we’re going to use some colors and a little helper node.
+
+1. We make a dummy node at the front of the list. This dummy points to the head and we'll call it `prev` for "previous". It'll help us easily swap the first two nodes.
+
+2. In each step, we’ll change certain links between nodes. These important links will be marked in **pink**.
+
+3. To swap the nodes, we use pointers, shown in **blue**. These pointers help us know which nodes we’re swapping and how to connect them.
+
+4. Next to the diagram of each step, we’ll show simple code steps for changing the links.
+
+
+![Swap Nodes](Swap%20Pairs%20of%20Nodes.png)
+
+Now let's code this!
+
+#### 💻 Code Implementation:
+```
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+         # Create a Dummy node that becomes "prev"
+        dummy = ListNode(0)
+        dummy.next = head
+        
+        prev = dummy 
+
+        # Since we are going to update using prev.next and prev.next.next
+        # they both should exist
+
+        while prev.next and prev.next.next:
+            # Find the "curr" and "nxt" nodes
+            curr = prev.next
+            nxt = prev.next.next
+            
+            # Pink links for swap
+            prev.next = nxt
+            curr.next = nxt.next
+            nxt.next = curr
+            
+            # Move the "prev" pointer to the next pair
+            prev = curr
+        
+        # The new head of the list is next to the dummy node
+        return dummy.next
+```
 
 ## 5. [Reverse Nodes in K Groups](https://leetcode.com/problems/reverse-nodes-in-k-group/description/)
 
 ### 5.1 Using Recursion
-- We know how to reverse a linked list from the Graded Assignment question. Given k, we can reverse the first k nodes and return the head and tail of the reversed portion.
-- For the next k nodes, you can pass the kth_node.next as the head and reverse the subsequent k nodes, returning their head and tail. This way, you reverse groups of k nodes. But how do you connect these groups?
+- You know how to reverse a linked list from the Graded Assignment question. Given a number ```k```, can you reverse the first ```k``` nodes and return the ```head``` and ```tail``` after reversing?
+- Now that we have successfully reversed the first ```k``` nodes, can you repeat the same thing for the next ```k``` nodes? So we have a way of reversing groups of ```k``` nodes. 
+- But here's the important part: how do you connect these reversed groups?
 
 🤔 Can you think of a recursive way?
 - Remember that the last reversed ```k``` nodes will be the first to return!
@@ -207,7 +264,7 @@ class Solution:
     - Then, reverse ```3 -> 4``` recursively as ```4 -> 3```, and return the head as ```4``` and tail as ```3```.
     - Now, Now, you just need to connect the tail of the first reversed group (1) to the head of the second reversed group (4). Voilà! You've connected the reversed groups.
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     # Helper function: returns the number of nodes in the linked list
@@ -220,14 +277,15 @@ class Solution:
         return count
 
     def reverse(self, head, k, n):
+        # Edge Case: The group is empty
         if not head:
             return head, None
 
-        # If k > n, then remaining nodes should remain as they are
+        # Edge case: If k > n, then remaining nodes should remain as they are
         if k > n:
             return head, None
 
-        # Reverse the K nodes in groups
+        # Reverse the K nodes in groups starting from "head"
         current = head
         prev = None
         next_node = None
@@ -245,7 +303,7 @@ class Solution:
         curr_head = prev # The head of the reversed k nodes
         curr_tail = head # tail of the reversed k nodes
 
-        # Recursively call reverse on the next k nodes
+        # Recursively call reverse on the next k nodes. Observe that the number of nodes in remaining list is: n - k
         next_head, next_tail = self.reverse(next_node, k, n - k)
         
         # Connect the current group's tail with the head of the next group
@@ -261,16 +319,17 @@ class Solution:
 
 ## 6. [Middle of The Linked List](https://leetcode.com/problems/middle-of-the-linked-list/description/)
 ### 6.1 Using Iteration
-How do we find the middle element in an array? We typically compute the middle index as: ```mid = len(L) // 2``` and then return ```L[mid]```.
+Let’s think about how we can find the middle element in a linked list, similar to how we do it in an array. We usually find the middle index by calculating `mid = len(L) // 2` and then return `L[mid]`. This works because arrays let us access any element directly by its index.
 
-Can you find out a similar approach in linked lists? Let's explore this:
+But in a linked list, we don’t have direct access to an element by index. So, how could we find the middle element?
 
-1. First, iterate over the entire list to determine its length.
-2. Next, compute the middle index. 
-3. Finally, traverse the list up to the middle node and return it. 
+Here's how:
+1. First, we need to compute `len(L)`. How can we do this? We could iterate through the entire list, counting each node as we go.
+2. Once we know the length, we can compute the middle index just like we did with the array: `mid = len(L) // 2`
+3. Finally, we would traverse the list again, stopping when we reach the middle node.
 
 - Time Complexity: $O(n)$
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def get_length(self, head):
@@ -294,10 +353,10 @@ class Solution:
         mid = n // 2
 
         # Iterate mid number of steps
-        i = 0
-        while i < mid: 
+        idx = 0
+        while idx < mid: 
             head = head.next # note that we are updating the head. So after "mid" iterations, head = middle node
-            i+=1
+            idx += 1
         
         # Since head = mid after iterating, we return head
         return head
@@ -306,7 +365,7 @@ class Solution:
 ## 7. [Delete the Middle Node](https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/description/)
 ### 7.1 Using Iteration
 
-We’ve already discussed how to find the middle node in a linked list, right? So, if we know how to reach the middle node, can we figure out how to delete it? 🤔
+We’ve already discussed how to find the middle node in a linked list. So, if we know how to reach the middle node, can we figure out how to delete it? 🤔
 
 To delete a node in a linked list, here’s what we need to do:
 
@@ -318,7 +377,7 @@ What if the linked list has only one node? In this scenario, we need to handle c
 
 - Time Complexity: $O(n)$
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def get_length(self, head):
@@ -336,11 +395,11 @@ class Solution:
         
         current = head # Iterate using current because we want to return the head
 
-        i = 0
+        idx = 0
         # Stopping one node before the middle node
-        while i < mid - 1:
+        while idx < mid - 1:
             current = current.next
-            i += 1
+            idx += 1
         
         # Change links of the node before to the next to next node by handling corner case
         if current.next and current.next.next:
@@ -352,18 +411,16 @@ class Solution:
 
 ## 8. [Delete nth Node From End](https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/)
 ### 8.1 Using Iteration
-This problem is very similar to the problem of deleting middle node.
 
-Observe that deleting the ```nth``` node from the end is the same as deleting ```(length - n)th``` node from the start. 
+We now know how to delete the middle node. Can you try to solve this problem using the ideas from that question?
 
-We can use a similar approach as we used in the above question to figure out the solution to this. 
-
+Here's a hint: Deleting the ```nth``` node from the end is the same as deleting ```(length - n)th``` node from the front. 
 
 ## 9. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/description/)
 
-This problem is very similar to the ```merge(A, B)``` operation from the merge sort. But instead of merging arrays, we’re merging linked lists! 🔗
+Remember Merge Sort algorithm? Can you see how this question is similar to the ```merge(A, B)``` operation from the merge sort algorithm? Only instead of merging arrays, we’re merging linked lists! 🔗 
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
