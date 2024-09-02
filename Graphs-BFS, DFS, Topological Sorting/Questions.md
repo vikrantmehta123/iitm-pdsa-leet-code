@@ -78,6 +78,23 @@ class Solution:
 
 ## 2. [Course Schedule-I](https://leetcode.com/problems/course-schedule/description/)
 
+
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+```numCourses = 3, prerequisites = [[1,0], [2, 1]]```
+
+Explanation:
+
+There are a total of 3 courses to take. To take course $1$ you should have finished course $0$. To take the course $2$, you need to finish course $1$. If a student decides to pursue courses as follows: $0, 1, 2$, then all courses can be completed. So we return ```True```.
+
+**Test Case 2:**
+```numCourses = 2, prerequisites = [[1,0], [0, 1]]```
+
+Explanation: 
+
+There are a total of $2$ courses to take. To take course $1$ you should have finished course $0$. To take the course $0$, you need to finish course $1$. It is not possible for a student to complete both courses. So we return ```False```. In essence, there is a cycle in the prerequisites.
+
 ### 2.1 Topological Sorting
 
 The ```prerequisites[i] = [a_i, b_i]``` $\implies$ ```b_i``` has to come before ```a_i```. In other words, ```a_i``` is dependent on ```b_i```. Can you convert this problem into a graph problem? Further, which algorithm do we need to use to find a sequence that satisfies dependencies?
@@ -257,22 +274,7 @@ Thus, we keep two graphs- one for ```items``` and one for ```groups```. Then we 
 
 #### Code:
 ```
-# Implementation of Queue
-class Queue:
-    def __init__(self):
-        self.queue = []
-    def enqueue(self,v):
-        self.queue.append(v)
-    def isempty(self):
-        return(self.queue == [])
-    def dequeue(self):
-        v = None
-        if not self.isempty():
-            v = self.queue[0]
-            self.queue = self.queue[1:]
-        return(v)    
-    def __str__(self):
-        return(str(self.queue))
+from collections import deque
 
 class Solution:
     # Creates a dictionary that returns all elements of a particular group. Used in the main algorithm when we are listing all the items # that belong to a group side by side
@@ -325,16 +327,16 @@ class Solution:
     def lpath(self, items_alist, group_alist, items_indegree, group_indegree, groupwise_items, n, group):
         output = [ ]
 
-        grp_queue = Queue()
-        items_queue = Queue()
+        grp_queue = deque()
+        items_queue = deque()
 
         for grp in group_indegree:
             if group_indegree[grp] == 0:
-                grp_queue.enqueue(grp)
+                grp_queue.append(grp)
 
         # Outer topological sort is for groups
-        while not grp_queue.isempty():
-            curr_grp = grp_queue.dequeue()
+        while grp_queue:
+            curr_grp = grp_queue.popleft()
             group_indegree[curr_grp] -= 1
             for adj_grp in group_alist[curr_grp]:
                 # Reduce the indegree of each adjacent group of the removed vertex by 1
@@ -342,17 +344,17 @@ class Solution:
 
                 # If after reducing the degree of adjacent group, it becomes zero then insert it into the group queue
                 if group_indegree[adj_grp] == 0 :
-                    grp_queue.enqueue(adj_grp)
+                    grp_queue.append(adj_grp)
 
             for i in groupwise_items[curr_grp]:
                 if items_indegree[i] == 0 :
-                    items_queue.enqueue(i)
+                    items_queue.append(i)
 
             # Inner topological sort is for the items
-            while (not items_queue.isempty()):
+            while items_queue:
 
                 # Remove one vertex from items queue which have zero degree items and reduce the indegree by 1
-                curr_vertex = items_queue.dequeue()
+                curr_vertex = items_queue.popleft()
                 output.append(curr_vertex)
                 items_indegree[curr_vertex] = items_indegree[curr_vertex] - 1
                 
@@ -363,7 +365,7 @@ class Solution:
 
                     # If after reducing the degree of adjacent item, it becomes zero then insert it into the items queue
                     if items_indegree[adj_vertex] == 0 and group[adj_vertex] == curr_grp:
-                        items_queue.enqueue(adj_vertex)
+                        items_queue.append(adj_vertex)
 
         if len(output) != n: return []
         return output
@@ -374,10 +376,12 @@ class Solution:
         items_alist, group_alist, items_indegree, group_indegree = self.preprocessing(beforeItems,group, m, n, group_wise_items)
         
         return self.lpath(items_alist, group_alist, items_indegree, group_indegree, group_wise_items, n, group)
+
 ```
 
 
 ## 6. [Find If Path Exists](https://leetcode.com/problems/find-if-path-exists-in-graph/description/)
+
 ### 6.1 Using BFS
 
 What is the question asking you to do?
