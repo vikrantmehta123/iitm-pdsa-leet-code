@@ -7,6 +7,17 @@
 
 ## 1. [Longest Subsequence With Limited Sum](https://leetcode.com/problems/longest-subsequence-with-limited-sum/description/)
 
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+
+```nums = [4, 5, 2, 1], queries = [3, 10, 21]```
+
+Explanation:
+For queries[0] = 3: The longest subsequence we can take from nums is [2, 1] because 2 + 1 = 3, which has 2 elements. So, the answer is 2.
+For queries[1] = 10: We can take [4, 2, 1], with a sum of 7, which has 3 elements. So, the answer is 3.
+For queries[2] = 21: We can take the whole array [4, 5, 2, 1], with a sum of 12, which has 4 elements. So, the answer is 4.
+
 ### 1.1: Brute Force
 - To find out the maximum number of elements less than or equal to some number, just add the smallest numbers. 
 - Sort the list first.
@@ -81,6 +92,15 @@ class Solution:
 ```
 
 ## 2. [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/description/)
+
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+```nums= [ 1, 1, 1, 2, 2, 3], k = 2```
+
+Explanation:
+In this test case, the number $1$ occurs thrice, the number $2$ occurs twice, and the number $3$ occurs once. Since we have to return top $2$ most frequent numbers, we return $1$ and $2$. Important to note here is that the question says nothing about whether the ```nums``` array is sorted or not. If it is not explicitly given in the question, we cannot assume it.
+
 ### 2.1 Using Dictionaries and Sorting
 - Initialize a dictionary. For every element in ```nums```, you count occurrences of that element. We can do this in a single pass. Plus this has the added benefit of eliminating duplicates, which we will use later. 
 - For every unique element from the ```nums``` array, create a new 2D array where each element is of the format: ```[element from nums, it's count]```
@@ -161,6 +181,22 @@ class Solution:
 
 
 ## 4. [Merge Intervals](https://leetcode.com/problems/merge-intervals/description/)
+
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+```intervals = [[1,3], [2,6], [8,10], [15,18]]```
+
+Explanation:
+We start with the first interval ```[1, 3]```. The next interval ```[2, 6]``` overlaps with ```[1, 3]```, so we merge them into ```[1, 6]```. The next interval ```[8, 10]``` doesn’t overlap with ```[1, 6]```, so we keep it as is. The last interval ```[15, 18]``` also doesn’t overlap with any previous intervals, so we keep it as is.
+
+**Test Case 2:**
+```intervals = [[1, 4], [2, 3], [5, 10]]```
+
+Explanation:
+We start with the first interval ```[1, 4]```. The next interval ```[2, 3]``` overlaps with ```[1, 4]```. But note that the first interval subsumes this one. So the merged interval is: ```[1, 4]```
+The last interval ```[5, 10]``` doesn't overlap with any previous intervals so we keep it as it is. 
+
 ### 4.1  Sorting intervals
 - If we want to merge intervals, it would be easier if overlapping intervals come adjacently in the input list, which means... Sorting!
 - Sort based on the start of the interval. 

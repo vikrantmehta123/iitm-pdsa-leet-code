@@ -10,6 +10,22 @@
 
 ## 1. [Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/description/)
 
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+```n = 3, trust = [[1, 3], [2, 3]]```
+
+Explanation: 
+
+There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trusts Person 3. Person 3 doesn't trust anyone, and both other people trust Person 3. This means Person 3 meets the conditions of being the town judge: trusted by everyone but trusts nobody. Hence, he is the town judge. 
+
+**Test Case 2:**
+```n = 3, trust = [[1, 3], [2, 3], [3, 1]]```
+
+Explanation:
+
+There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trusts Person 3. Person 3 trusts Person 1, which means Person 3 is not trusted by everyone (because Person 1 and Person 2 trust Person 3, but Person 3 also trusts Person 1). The town judge must trust nobody and be trusted by everyone else. Since Person 3 doesn't meet this condition (because they trust Person 1), there is no town judge. So we return -`.
+
 ### 1.1 By Counting Indegrees
 
 We're given the array ```trusts```, where ```trust[i] = [a_i, b_i]``` means that ```a_i_``` trusts ```b_i_```. Can we convert this problem into a graph problem?

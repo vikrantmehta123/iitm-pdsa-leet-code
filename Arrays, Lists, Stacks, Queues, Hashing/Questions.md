@@ -15,13 +15,23 @@
 
 ### 1.1 Using Stacks
 
+🎯 Understanding the Test Cases
+
+**Test Case 4:**
+Input: ```s = "[()]"```
+Explanation: The string ```"([])"``` is valid because each open bracket has a matching closing bracket, and they close in the correct order. Since all brackets are properly paired, the string evaluates to ```True```.
+
+**Test Case 3:**
+Explanation: The string ```"(]"``` is invalid because the open bracket ```(``` is not closed by the correct type of bracket. The closing bracket ```]``` doesn’t match the opening ```(```, so the string evaluates to ```False```. 
+
+
 🔍 Problem Understanding:
 
 We only have three types of brackets: ```[], (), {}```. And we need to close the last opened bracaket first. What do you do when you need to close the last opened bracket first? You need a system where the last thing you add is the first thing you take out, right? This is the Last In, First Out (LIFO) system. So, what data structure works best for LIFO? A **stack**! A stack can help us keep track of the brackets. Whenever we find an opening bracket, we push it onto the stack. When we encounter a closing bracket, we pop the stack to see if it matches the last opened bracket.
 
 🤔 Think about this:
 
-Let’s say you’ve read the first two characters of a string and added them to the stack. Your stack might look like this: stack = ['(', '{']. Now, what if the next character is }? How do you know if this closing bracket matches the last opened one? To figure this out, we can use a simple mapping: each closing bracket corresponds to its opening bracket, like this: ```closing bracket : Corresponding opening bracket```. This way, we can check if every closing bracket matches the correct opening one.
+Let’s say you’ve read the first two characters of a string and added them to the stack. Your stack might look like this: ```stack = ['(', '{']```. Now, what if the next character is ```}```? How do you know if this closing bracket matches the last opened one? To figure this out, we can use a simple mapping: each closing bracket corresponds to its opening bracket, like this: ```closing bracket : Corresponding opening bracket```. This way, we can check if every closing bracket matches the correct opening one.
 
 ⚠️ Edge Cases:
 
@@ -64,6 +74,11 @@ class Solution:
 ```
 
 ## 2. [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/description/)
+
+🎯 Understanding the Test Cases:
+**Test Case 1:**
+```nums=[100, 4, 200, 1, 3, 2]```
+Explanation: The longest consecutive sequence in the array is [1, 2, 3, 4], which has a length of 4. Note that it is okay if the numbers do not appear contiguously in the array. For example, in this the number ```4``` occurs before the the other numbers in the sequence. All that we are asked is to return the length of the longest sequence whose elements are consecutive integers.
 
 ### 2.1 Brute Force
 
@@ -200,7 +215,7 @@ class Solution:
 ## 4. [Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/description/)
 ### 4.1 Intuition
 
-Let’s break this problem down step by step with the help of an image. Imagine we have a linked list, and we want to swap every two nodes. To make this easier, we’re going to use some colors and a little helper node.
+Let’s break this problem down step by step with the help of an image. Imagine we have a linked list, and we want to swap every two nodes. To make this easier, we'll look at an illustration. We’re going to use some colors and a little helper node.
 
 1. We make a dummy node at the front of the list. This dummy points to the head and we'll call it `prev` for "previous". It'll help us easily swap the first two nodes.
 

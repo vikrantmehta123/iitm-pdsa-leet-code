@@ -5,6 +5,7 @@
 ##### 3. [Fibonacci Numbers](#3-fibonacci-numbers-1)
 ##### 4. [Triangle](#triangle-1)
 ##### 5. [Coin Change](#5-coin-change-1)
+##### 6. [Best Time to Buy and Sell Stock II](#6-best-time-to-buy-and-sell-stock-ii-1)
 
 ## 1. [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/description/)
 
@@ -219,3 +220,6 @@ class Solution:
         # If dp[amount] is still inf, it means it's not possible to make that amount with given coins
         return dp[amount] if dp[amount] != float('inf') else -1
 ```
+
+## 6. [Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)
+### 6.1 Using Dynamic Programming
