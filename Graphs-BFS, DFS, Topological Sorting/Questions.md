@@ -28,23 +28,31 @@ There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trus
 
 ### 1.1 By Counting Indegrees
 
-We're given the array ```trusts```, where ```trust[i] = [a_i, b_i]``` means that ```a_i_``` trusts ```b_i_```. Can we convert this problem into a graph problem?
+**How Can We Think of Trust as a Graph?🤔**
 
+We have an array `trusts`, where each entry `trust[i] = [a_i, b_i]` tells us that `a_i` trusts `b_i`. What if we turned this into a graph? 
+
+- **Question:** If `a_i` trusts `b_i`, how could we represent this in a graph?  
 If ```a_i_``` trusts ```b_i_```, then we can consider it an edge from ```a_i_``` to ```b_i_```. 
 
-The townjudge is a person who:
-- Trusts no one $\implies outdegree(townjudge) = 0$ , and
-- Everyone except him / herself trusts him / her $\implies indegree(townjudge) = n - 1$.
+**Finding the Town Judge:**
 
-Keep two dictionaries:
-- To count the indegrees of all the nodes
-- To count the outdegrees of all the nodes
+The town judge is a person who:
 
-Then for every person, check if its outdegree is $0$ and indegree is $n-1$.
+1. *Trusts no one* $\implies$ *Outdegree = 0*
+2. *Is trusted by everyone* $\implies$ *Indegree = n - 1*
 
-Complexity: $O(n)$, since the creating the dictionaries takes $O(n)$ and then iterating over people takes another $O(n)$.
+To solve this, we can use dictionaries:
 
-#### Code:
+1. *Indegree Dictionary* 📥: Tracks how many people trust each person.
+2. *Outdegree Dictionary* 📤: Tracks how many people each person trusts.
+
+- How can we use these dictionaries to find the town judge?  
+we can check if someone has an outdegree of 0 and an indegree of `n-1`. Since the town judge is unique, whenever we find such person, we can return it.
+
+Time complexity: $O(n)$:
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def findJudge(self, n: int, trust: List[List[int]]) -> int:        
@@ -97,14 +105,20 @@ There are a total of $2$ courses to take. To take course $1$ you should have fin
 
 ### 2.1 Topological Sorting
 
-The ```prerequisites[i] = [a_i, b_i]``` $\implies$ ```b_i``` has to come before ```a_i```. In other words, ```a_i``` is dependent on ```b_i```. Can you convert this problem into a graph problem? Further, which algorithm do we need to use to find a sequence that satisfies dependencies?
+🔍 Problem Understanding:
 
-If ```b_i``` has to come before ```a_i```, then we add an edge from ```b_i``` to ```a_i```. Please note the direction of the edge. We can convert this into an adjacency matrix or an adjacency list. For this problem, we are converting the graph into an adjacency matrix. Once we have converted this problem into a graph problem, we can use the algorithm we use when we need to find a sequence that satisfies some dependencies- topological sorting.
+We have a list of prerequisites where each pair `prerequisites[i] = [a_i, b_i]` means that you need to complete `b_i` before taking `a_i`. In simpler terms, `a_i` depends on `b_i`. How can we convert this into a graph?
 
-When would you say that we have successfully found the sequence of courses satisfying the dependencies? 
-When we the sequence that we get has all the courses- no course is left.  
+Now, the big question: how do we find a sequence of courses that respects all the dependencies? 🤔 Which algorithm should you use?
 
-#### Code:
+We can use topological sorting to get this sequence. 
+
+If `b_i` needs to be completed before `a_i`, we add a directed edge from `b_i` to `a_i`. Note the direction of the edge. For this problem, we are converting the `prerequisites` array into graph using adjacency matrix. Once we have converted this problem into a graph problem, we can use the topological sorting.
+
+When could we say that we have successfully found the sequence of courses satisfying the dependencies? 
+When we the sequence includes all the courses, and no course is left. If a course is left out, there’s likely a cycle or unresolved dependency.
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def preprocessing(self, numCourses, prerequisites) -> list[list[int]]:
@@ -121,11 +135,11 @@ class Solution:
         toposortlist = []
         
         #Compute indegree for each vertex
-        for c in range(cols):
-            indegree[c] = 0
-            for r in range(rows):
-                if AMat[r][c] == 1:
-                    indegree[c] = indegree[c] + 1
+        for col in range(cols):
+            indegree[col] = 0
+            for row in range(rows):
+                if AMat[row][col] == 1:
+                    indegree[col] = indegree[col] + 1
         
         # Topological sort Computing process
         for i in range(rows):
@@ -150,19 +164,19 @@ class Solution:
         toposortlist = self.toposort(adjacency_matrix)
         if len(toposortlist) == numCourses: return True
         return False
-
 ```
 
 ### 2.2 Topological Sort: Better Implementation
 
-The approach used is similar to the above approach. However, we are utilizing better data structures to increase our performance. Instead of keeping an adjacency matrix, we are utilizing a combination of doubly ended queues and adjacency lists. 
+The approach used is similar to the above approach. However, we are using better data structures to increase our performance. Instead of keeping an adjacency matrix, we are using doubly ended queues and adjacency lists. 
 
 Here's how:
 - Keep a deque for vertices with zero degree queue such that the insert at end and delete from start operations are both constant time.
 - Keep a dictionary of indegrees which counts the indegrees for each vertex
 
 Complexity: $O(|V| + |E|)
-#### Code:
+
+#### 💻 Code Implementation:
 
 ```
 from collections import deque, Counter
@@ -213,20 +227,23 @@ We can use the same approaches discussed in the above question.
 
 ## 4. [Snakes and Ladders](https://leetcode.com/problems/snakes-and-ladders/description/)
 
+🎯 Understanding the Test Cases:
+
+**Test Case 1:**
+
 ### 4.1 Using BFS
 
-We are given a board with $n^2$ cells. From any particular cell, there can be at maximum only six moves. Can we convert this structure into a graph?
+📚 *Problem Overview:*
 
-For example, in the first test case, assume we are at cell $1$. 
+We have a board with $n^2$ cells, and from any cell, we can make up to 6 possible moves. Can we turn this into a graph? Yes! Here's how:
 
-The next possible moves are: $15, 3, 4, 5, 6, 7$ because $2$ has a ladder to $15$. 
-From cell $1$, we can make each of the next possible moves as an edge.
+1. Start at cell 1.
+2. We can roll a dice and move to next six cells. In the first test cases, the next possible moves are: 15, 3, 4, 5, 6, 7 (because cell 2 has a ladder to 15). If cell has $-1$ value, then it's an empty cell. But if it has a different value, then it is either a snake or a ladder.
+3. Each possible move from a cell is an edge in our graph.
+4. once we have the graph, We need to find the least number of moves required to go from cell 1 to cell $n^2$. This is a **shortest path** problem where there are no weights on the edges- we can use *Breadth-First Search (BFS)*. 
 
-The task is to find the least number of moves required to reach $n^2$ starting from $1$. Can you identify what type of a problem this is and which algorithm we can use for this problem?
 
-It's a shortest path problem without edge weights. The algorithm that we can use for this problem is BFS. 
-
-Pseudocode:
+*Pseudocode:*
 - We first need to convert the board into a graph. 
     - For every cell, check the next six cells. 
         - If the cell has a ladder or a snake, then we need to find out where the ladder ends which is given in cell: ```board[row][col]```
@@ -235,50 +252,124 @@ Pseudocode:
 
 - Once we have the graph, we can run BFS on this graph, which will return the shortest path. 
 
-#### Code:
+#### 💻 Code Implementation:
+```
+from collections import deque
+# Using BFS approch For Adjacency list, for path, maintaining the parent of each vertex
+# Using BFS approch maintaing the adjacent level number from source vertrex
+def BFSListPathLevel(AList,v):
+    # Initialization
+    (level,parent) = ({},{})
+    for each_vertex in AList.keys():
+        level[each_vertex] = -1
+        parent[each_vertex] = -1
+    
+    # Create Queue object q
+    q = deque()
+    
+    # Assigning the level 0 for start_vertex and insert it into the queue
+    level[v] = 0
+    q.append(v)
+    
+    # Repeat the following until the queue is empty
+    while q:
+        # Remove the one vertex from queue
+        curr_vertex = q.popleft()
+        # Visit the each adjacent of curr_vertex(if level value is -1) and insert into the queue
+        for adj_vertex in AList[curr_vertex]:
+            if (level[adj_vertex] == -1):
+                # Assign the level value on each adjacent one more than the curr_vertex level
+                level[adj_vertex] = level[curr_vertex] + 1
+                # Assigne the curr_vertex as parent of adjacent vertex of curr_vertex
+                parent[adj_vertex] = curr_vertex
+                q.append(adj_vertex)
+                
+    return(level,parent)
+
+
+class Solution:
+    def get_indices(self, cell, n):
+        """A helper function to convert the Boustrophedon style sequence into a cell's row and column index"""
+        remainder = (n - 1) % 2
+        row = (n - 1) - ((cell - 1) // n)
+        if row % 2 == remainder:
+            col = (cell % n) - 1 if cell % n != 0 else n - 1
+        else:
+            col = (n) - (cell % n) if cell % n !=0 else 0
+        return row, col
+
+    def preprocessing(self, board:List[List[int]]) -> list[list[int]]:
+        """Converts the board into a graph"""
+        n = len(board)
+        AList = {i:set() for i in range(1, n*n + 1)}
+        for i in range(1, n*n + 1):
+            for j in range(i + 1, min(i + 7, n*n + 1)):
+                row, col = self.get_indices(j, n)
+                val = board[row][col]
+                if val == -1:
+                    AList[i].add(j)
+                else:
+                    if val == i:
+                        continue
+                    AList[i].add(val)
+        return AList            
+            
+    def snakesAndLadders(self, board: List[List[int]]) -> int:
+        n = len(board)
+        AList = self.preprocessing(board)
+        level, parent = BFSListPathLevel(AList, 1)
+        return level[n*n] # The last cell holds shortest path from start to the last cell
+```
 
 
 ## 5. [Sort Items By Groups Respecting Dependencies](https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/description/)
 
 ### 5.1 Using Topological Sort
-We need to list a a sequential order of ```items``` such that the items belonging to the same group are listed next to each other. Each item can have a dependency such that the other item needs to be completed first- as given in the ```beforeItems``` array. It is easy to see that this is a topological ordering problem. 
 
-Take a moment to think about the following:
-Let's say we run topological sort directly on the beforeItems. We may pass some test cases. But what test cases might we fail?
-Whenever we have multiple ```items``` that have zero indegree, then we have to make a choice as to which item should we take first. Let's take an example: 
+📚 **Problem Overview:**
+We need to order a list of items so that all items in the same group are listed next to each other. Additionally, some items have dependencies, meaning one item must be completed before another. We can use topological sort to solve this problem.
+
+🤔 **The Issue:**
+
+If we just run topological sort on the `beforeItems` array, it might work for some test cases. But can you think of the test cases where this approach will fail?
+
+*Imagine this situation:*
 ```
-group[0] = [1, 2]
-group[1] = [3, 4]
-indegree[1] = 0
-indegree[3] = 0
-indegree[2] = indegree[4] = 1 
-
-Assume: 2 needs to be come before 4, and 1 needs to come before 2. 
-1 -> 2 -> 4
+Group 0: Items [1, 2]
+Group 1: Items [3, 4]
 ```
+*Here’s the setup:*
 
-Now, the issue will come when we are selecting between the ```items``` 1 and 3. If our algorithm chooses 3, then all the other elements belonging to group 1 should come next to 3- like: 3, 4-, and only then we'll be able to add elements from group 0- like: 3, 4, 1, 2. This violates the condition that ```1 -> 2 -> 4```.
+Item 1 has no dependencies (`indegree[1] = 0`)\
+Item 3 also has no dependencies (`indegree[3] = 0`)\
+Item 2 and Item 4 each have one dependency (`indegree[2] = 1 and indegree[4] = 1`)\
 
-To solve this problem, we need to keep a graph for the ```groups``` as well. Whenever we are choosing which ```item``` to select for the topological order, we need to first check the ```groups``` graph. 
+*Now, assume:*
 
-Thus, we keep two graphs- one for ```items``` and one for ```groups```. Then we run a sort of nested topological sort- the outer one for the ```groups``` graph, and the inner one for the ```items``` graph. This will give us the correct solution that respects both the group dependencies and the item dependencies. 
+Item 2 must come before Item 4\
+Item 1 must come before Item 2\
+This means the correct order should be: 1 → 2 → 4.\
 
-#### Psuedocode:
-1. Since we are going to need to list all elements belonging to a group side by side, we will keep a dictionary of the format: ```group:[all items of that group]``` for easy retrieval.
+The problem arises when choosing between Item 1 and Item 3, as both have no dependencies. If we choose Item 3 first, we should list the other items from Group 1 next to it, leading to an order like this: 3, 4. This leaves us with Group 0 and the sequence 1, 2. The final order would be 3, 4, 1, 2, which breaks the dependency 1 → 2 → 4.
 
-2. Use ```beforeItems``` array to construct both the graphs- ```groups``` and ```items```. You can use the either an adjacency matrix or an adjacency list representation for this. Here, we are using Adjacency List representation. 
-    - If ```items[i]``` needs to come before ```items[j]```, then add edge from ```i``` to ```j``` for the ```items_graph```. 
-    - Similarly, for the ```group_graph```, add the edge from ```group[i]``` to ```group[j]```, since the item in ```i```th group needs to come before the item in the ```j```th group. 
+💡 **The Solution:**
+To solve this, we need to track the dependencies of both individual items and groups. Here’s how we can do that:
 
-3. Once you have the graphs, run nested topological sort as mentioned above. 
+- Create Two Graphs:
+    - Item Graph: Use the `beforeItems` array to build a graph showing how items depend on each other.
+    - Group Graph: Also use the `beforeItems` array to build a graph showing how groups depend on each other.
+    - We can use either the adjacency list or the adjacency matrix representation. Here, we are using the adjacency list representation.
+- Run Nested Topological Sort:
+    - Outer graph to perform topological sorting on the `group` graph.
+    - Then, within each group, sort the items using topological sorting.
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 from collections import deque
 
 class Solution:
-    # Creates a dictionary that returns all elements of a particular group. Used in the main algorithm when we are listing all the items # that belong to a group side by side
     def get_group_wise_elements(self, group, m):
+        """Helper function to quickly access all items belonging to a group"""
         group_wise_elements = { i:[] for i in range(m) }
         for i in range(len(group)):
             grp = group[i] if group[i] >= 0 else -i-1
@@ -287,8 +378,10 @@ class Solution:
             group_wise_elements[grp].append(i)
         return group_wise_elements
 
-    # Convert the problem into two graphs- group_graph and items_graph. Along with it, return indegrees for each node in both the graphs. 
     def preprocessing(self, beforeItems, group, m, n, groupwise_items):
+        """
+        Given the beforeItems array, this function converts it into two graphs- Groups and Items. Along with it, we are also returning the indegrees of each of the graphs' nodes so that we can smoothly run topological sort. 
+        """
         group_indegree, items_indegree = {}, {i:0 for i in range(n)}
         items_alist =  {i:[] for i in range(n)}
         group_alist = {}
@@ -323,8 +416,9 @@ class Solution:
 
         return items_alist, group_alist, items_indegree, group_indegree
 
-    # Run the actual nested topological sorting algorithm
+    
     def lpath(self, items_alist, group_alist, items_indegree, group_indegree, groupwise_items, n, group):
+        """The actual nested topological sorting algorithm"""
         output = [ ]
 
         grp_queue = deque()
@@ -342,18 +436,19 @@ class Solution:
                 # Reduce the indegree of each adjacent group of the removed vertex by 1
                 group_indegree[adj_grp] -= 1
 
-                # If after reducing the degree of adjacent group, it becomes zero then insert it into the group queue
+                # Add new zero degree groups to the group deque
                 if group_indegree[adj_grp] == 0 :
                     grp_queue.append(adj_grp)
 
+            # For popped group, find out zero degree items
             for i in groupwise_items[curr_grp]:
                 if items_indegree[i] == 0 :
                     items_queue.append(i)
 
-            # Inner topological sort is for the items
+            # Topological sort is for the items
             while items_queue:
 
-                # Remove one vertex from items queue which have zero degree items and reduce the indegree by 1
+                # Remove one vertex from items queue which have zero degree items and reduce the indegree
                 curr_vertex = items_queue.popleft()
                 output.append(curr_vertex)
                 items_indegree[curr_vertex] = items_indegree[curr_vertex] - 1
@@ -363,7 +458,7 @@ class Solution:
                     # Reduce the indegree of each adjacent of the removed item by 1
                     items_indegree[adj_vertex] = items_indegree[adj_vertex] - 1
 
-                    # If after reducing the degree of adjacent item, it becomes zero then insert it into the items queue
+                    # Add items to items deque if their indegree becomes zero
                     if items_indegree[adj_vertex] == 0 and group[adj_vertex] == curr_grp:
                         items_queue.append(adj_vertex)
 
@@ -376,7 +471,6 @@ class Solution:
         items_alist, group_alist, items_indegree, group_indegree = self.preprocessing(beforeItems,group, m, n, group_wise_items)
         
         return self.lpath(items_alist, group_alist, items_indegree, group_indegree, group_wise_items, n, group)
-
 ```
 
 
@@ -384,23 +478,21 @@ class Solution:
 
 ### 6.1 Using BFS
 
-What is the question asking you to do?
-- We need to find out whether we can reach a particular destination from the given source node. That is, it's a reachability problem. 
+📚 **Problem Overview:**
 
-Can you convert the given ```edges``` list into an adjacency list or an adjacency matrix representation?
-- Each ```edges[i] = [u_i, v_i]``` represents a bidirectional edge, which means there is an edge from ```u``` to ```v```, and ```v``` to ```u```. 
-- So we can iterate over the entire ```edges``` array, and add the two edges for every ```edges[i]```. Here's the code snippet for converting the ```edges``` array into an adjacency list:
+We need to figure out if we can go from a source node to a destination node. This is a reachability problem in a graph. We know we can use *BFS* or *DFS* on an adjacency list or a matrix for reachability problem 
+
+Can you convert the given `edges` list into an adjacency list or an adjacency matrix representation?
+- We have a list of edges where each `edges[i] = [u, v]` shows an edge between nodes `u` and `v`.
+- To create an adjacency list, we can do:
 ```
 for u, v in edges:
     adj_list[u].append(v)
     adj_list[v].append(u)
 ```
 
-Once we have the adjacency list, which algorithm will give us whether we can reach ```destination``` from the ```source```?
-- We can use either BFS or DFS. For this solution, we are using BFS. 
-
-#### Code:
-Note: For a better, more concise code, we have used the ```deque``` data structure from the ```collections``` module in Python. We can use it to implement a ```queue``` used in BFS. 
+#### 💻 Code Implementation:
+Note: For a better, more neat code, we have used the ```deque``` data structure from the ```collections``` module in Python. We can use it to implement a ```queue``` used in BFS. 
 
 ```
 from collections import deque
@@ -428,24 +520,28 @@ class Solution:
 
 ## 7. [Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
 
-### 7.1 Using BFS
-We are given a matrix ```isConnected```, whose ```[i][j]```th entry tells us whether there is an undirected edge from ```i``` to ```j```. We can interpret this ```isConnected``` matrix as an adjacency matrix. 
 
-A province is a set of vertices that are connected to each other. We are asked to find the number of provinces from the matrix. 
+### 📚 Problem Overview:
 
-Can you identify the type of the problem?
-- The problem is about finding the number of connected components from the graph. 
+We are given a matrix `isConnected` where each entry `[i][j]` tells us if there is a connection (edge) between nodes `i` and `j`. We can think of this as an **adjacency matrix** for a graph.
 
-Can you identify which algorithm we can use to solve this problem?
-- We can use BFS or DFS to solve this problem. For this solution, we will use BFS. 
+A **province** is a group of nodes that are all connected. The task is to count how many such provinces exist.
 
-#### Code:
+🤔 Can you think of a similar problem that we saw in the lectures?
+
+This is a **connected components** problem. We need to find how many separate groups of connected nodes exist in the graph.
+
+**💡 The Solution:**
+
+To solve this, we can use either **BFS** or **DFS**. For this explanation, we’ll go with **BFS** to explore each connected component one by one.
+
+#### 💻 Code Implementation:
 ```
 from collections import deque
 
 class Solution:
     def get_neighbors(self, AMat, vertex):
-        """Given an adjacency matrix and a vertex, returns all neighbors for that vertex"""
+        """Helper function to find out all neighbors of a node given the adjacency matrix."""
         neighbors = []
         for i in range(len(AMat)):
             if AMat[vertex][i] == 1:

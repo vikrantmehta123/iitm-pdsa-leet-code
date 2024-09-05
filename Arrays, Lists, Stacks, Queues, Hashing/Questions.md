@@ -40,7 +40,7 @@ What happens if you have opening brackets left in the stack, but the string ends
 Time Complexity: $O(n)$\
 Space Complexity: $O(n)$
 
-#### 💻 Code Implementation::
+#### 💻 Code Implementation:
 ```
 class Solution:
     def isValid(self, s: str) -> bool:
