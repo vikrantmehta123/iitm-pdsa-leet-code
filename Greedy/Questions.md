@@ -9,21 +9,24 @@
 ## 1. [N Meetings in One Room](https://www.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1)
 
 ### 1.1 Using Greedy Approach
-The question is asking us to find out the maximum number of meetings that could be scheduled without conflicts given two arrays- ```start``` and ```end```. 
 
-Can you find out what type of problem this is?
-- It is a classic interval scheduling problem. 
+**📚 Problem Overview:**
+We need to schedule the **maximum number of meetings** without any conflicts, given two arrays: `start` and `end`.
 
-The way we go about solving such problems is by sorting the schedules based on their end times and then picking those meetings that don't conflict. 
+🤔 Can you find out what type of problem this is?\
+It is a classic interval scheduling problem. 
 
-Here's how we can approach the solution:
-- Combine the ```start``` and ```end``` arrays into a single array of the form: ```[start_i, end_i]```
-- Sort the list based on the times
-- Keep track of the end time of the last meet.
-    - If the start of the current meet overlaps with the previous end time, then we skip the meet. 
-    - Else, we increment the meeting counter, and update the previous end time as the end time of the current meet. 
+From the lectures, we know we can solve such problems by sorting the schedules based on end times, and selecting the meetings that don't conflict.
 
-#### Code:
+Here's how we can solve this:
+- Combine the `start` and `end` arrays into a single array of the form: `[(start_i, end_i)]`
+- Sort the list based on the end times- earliest end times come first.
+- Track of the end time of the last meeting.
+- For each new meeting:
+    - If it overlaps with the previous one (starts before the previous one ends), then skip it. 
+    - Else, we increment the meeting count, and update the end time. 
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def maximumMeetings(self,n,start,end):
@@ -53,7 +56,7 @@ class Solution:
 ### 2.1 Greedy Approach
 Same approach as the above question. 
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def activitySelection(self,n,start,end):
@@ -82,12 +85,15 @@ class Solution:
 
 ### 3.1 Using Greedy
 
-Note: In general, we cannot guarantee that greedy algorithm will produce correct output. However, in the case of this question, we can use greedy approach. Because the number of smaller denominations is bounded by the fact that we can use larger denominations to represent the smaller denominations. For example, the number of coins of denomination 2 cannot be more than 2, because if their number is 3, then we can replace it with one coin of denomination 5 and one coin of denomination 1. That is, with fewer coins of larger denomination, we can represent more coins of lower denomination. 
+Note: In general, we cannot say that greedy algorithm will produce correct output for such problems. But in this problem, larger denominations can represent multiple smaller ones. For example, 3 coins of value 2 can be replaced by 1 coin of value 5 and 1 coin of value 1. So, we can use fewer large coins to replace many smaller ones.
 
-Thus, we can choose a greedy approach:
-- Keep on subtracting the coin of largest denomination. Then move on to second largest, then third, and so on, till you reach 0. 
-- Every time you subtract a coin / note, add the denomination to a results array.
-#### Code:
+💡 Thus, we can use Greedy Approach:
+- Start with the largest denomination.
+- Subtract it from the amount until you can't anymore.
+- Move to the next largest and repeat.
+- Add each coin/note used to the result.
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def minPartition(self, N):
@@ -107,26 +113,31 @@ class Solution:
 
 ### 4.1 Using Greedy Approach
 
-The question is asking us to find out whether the last index can be reached or not using the given ```nums``` array. ```nums[i]``` corresponds to the maximum jump we can take from the ```ith``` index. We can solve this problem using the Greedy Approach. 
+**📚 Problem Overview:**
+We need to check if we can reach the last index of the nums array. Each element in `nums[i]` tells us the maximum jump we can take from index `i`.
 
-Here's how:
-- We'll keep a ```max_jump``` variable, that acts like a flagpost. It tells what is the maximum index that we can reach based on the values of ```nums[i]``` we have seen so far. 
-- Then we iterate over all the values of ```nums```.
-    - Whenever this ```max_index``` goes beyond the length of the array, we will return ```True```. 
-    - For every value in ```nums```, we update the ```max_jump``` as: ```max_jump = max(max_jump, nums[i] + i)```
-    - But it is also possible that we cannot reach the last index. Consider the example ```nums = [1, 0, 2]```. In this example, once we reach the 1st index, there is no way to move forward. Can we capture this in a condition?
-        - Whenever ```i > max_jump```, that means we have reached a place from where we cannot proceed further. Thus, we can return ```False``` here. 
+We can solve this problem using the Greedy Approach. 
 
-#### Code:
+**🤔 Greedy Approach:**
+1. Use a `max_jump` variable to keep track of the **furthest index** we can reach so far.
+   
+2. Iterate Over `nums`:
+   - At each step, update `max_jump` using: `max_jump = max(max_jump, nums[idx] + idx)`.
+   - If `max_jump` reaches or exceeds the last index, return `True` (we can reach the end!).
+   
+3. If `idx > max_jump`, it means we are **stuck** and can't move forward, so return `False`.
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
         max_jump = 0
-        for i in range(len(nums)):
-            # i <= max_jump -> case to check [1, 0, 2] like condition
-            # nums[i] + i > max_jump to update the jump
-            if i <= max_jump and nums[i] + i > max_jump :
-                max_jump = nums[i] + i
+        for idx in range(len(nums)):
+            # idx <= max_jump -> case to check [1, 0, 2] like condition
+            # nums[idx] + idx > max_jump to update the jump
+
+            if idx <= max_jump and nums[idx] + idx > max_jump :
+                max_jump = nums[idx] + idx
         
         # Check whether you can reach the last index or not.
         return max_jump >= len(nums) - 1
@@ -136,8 +147,9 @@ class Solution:
 ## 5 [Jump Game-II](https://leetcode.com/problems/jump-game-ii/)
 
 ### Using Greedy Approach
+We can use similar approach as the above question.
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def jump(self, nums: List[int]) -> bool:

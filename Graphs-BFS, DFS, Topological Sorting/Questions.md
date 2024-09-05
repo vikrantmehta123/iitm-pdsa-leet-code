@@ -521,7 +521,7 @@ class Solution:
 ## 7. [Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
 
 
-### 📚 Problem Overview:
+**📚 Problem Overview:**
 
 We are given a matrix `isConnected` where each entry `[i][j]` tells us if there is a connection (edge) between nodes `i` and `j`. We can think of this as an **adjacency matrix** for a graph.
 
