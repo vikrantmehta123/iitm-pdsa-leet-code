@@ -8,17 +8,20 @@
 
 ### 1.1 Using Inorder Traversal
 
-We know that the inorder traversal of a binary search tree gives a sorted list of elements. Can you try to reason as to why this can be helpful to find out whether we have a valid binary search tree or not?
+**📚 Problem Overview:**
 
-If the tree is a valid binary search tree, then it's inorder traversal will be a valid sorted list. 
-But on the other hand, if the tree is not a valid binary search tree, then it's inorder traversal will not be a sorted list. 
+In a *binary search tree* (BST), the *inorder traversal* gives a *sorted list* of elements. If the BST is valid, then it's inorder traversal will produce a sorted list. If it is not valid, the inorder traversal will not produce a sorted list.
 
-So, that's what we do:
-- Do the inorder traversal on the tree
-- Go over the elements in the list to check if the list is in a sorted order: Comparing current element with the previous element can be sufficient for this.
+**💡 Approach:**
 
-Time complexity: $O(n)$
-#### Code:
+1. Perform *inorder traversal* on the tree.
+2. Check if the result is *sorted* by comparing each element with the previous one.
+
+If the list is sorted, the tree is a valid BST. If not, it's invalid.
+
+**⏳ Time Complexity:** $O(n)$
+
+#### 💻 Code Implementation:
 ```
 class Solution:
     def isValidBST(self, root):
@@ -50,24 +53,25 @@ class Solution:
 ## 2. [Network Delay Time](https://leetcode.com/problems/network-delay-time/description/)
 
 ### 2.1 Using Dijkstra
-We are given an array ```times``` where ```times[i] = [u_i, v_i, w_i]```, where ```u_i``` is the source node, ```v_i``` is the destination and ```w_i``` is the weight of that edge. It is clear that this is a directed graph. 
 
-Can you convert the ```times``` array into a more graph suited representation like an adjacency list or an adjacency matrix?
-- Here's the code snippet that can accomplish this:
+**📚 Problem Overview:**
+We have an array times where each element `times[i] = [u, v, w]` represents a directed edge from node `u` to node `v` with weight `w`. This is a directed graph. 
+
+Can you convert the `times` array into a graph?\
+We can represent the `times` array as an adjacency list:
+
 ```
 WList = { i:[] for i in range(1, n+1) }
-visited = {i : False for i in range(1, n+1)}
 for u, v, w in times:
     WList[u].append((v, w))
 ```
 
-The question is asking us to find out the minimum time it will take for the signal to reach all nodes if started from the node ```k```. Can you identify what type of a problem this is?
-- It is a shortest path problem. Since time will be non-negative, we can use Dijkstra here. 
+We need to find out the minimum time it will take for the signal to reach all nodes if started from the node `k`. Can you identify what type of a problem this is? 🤔 
 
-Observe the following:
-- The minimum time taken to reach all vertices is the same as the minimum time it would take to "burn" the last reached vertex when using Dijkstra. This is the same as the maximum shortest path after running Dijkstra. 
+This is a shortest path problem. Since the weights are non-negative, we can solve it using Dijkstra's algorithm. 
+The minimum time for the signal to reach all nodes is the maximum shortest path found after running Dijkstra. In other words, it’s the time when the last node receives the signal.
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 import heapq
 
@@ -88,8 +92,10 @@ class Solution:
         heap = [(0, k)]  # (distance, node)
 
         while heap:
-            current_dist, node = heapq.heappop(heap) # By default, heapq.heappop(heap) returns the minimum element from heap
+            # By default, heapq.heappop(heap) returns the minimum element from heap
+            current_dist, node = heapq.heappop(heap) 
             visited[node] = True
+
             if current_dist > dist[node]:
                 continue
 
@@ -101,8 +107,8 @@ class Solution:
                     dist[neighbor] = distance
                     heapq.heappush(heap, (distance, neighbor))
 
-        # The minimum time taken for the signal to reach all the vertices, is the same as the last vertex to get "burnt" in Dijkstra's algorithm, which is the same as
-        # maximum of shortest distance values
+        # The minimum time taken for the signal to reach all the vertices, is the same as the last vertex to 
+        # get "burnt" in Dijkstra's algorithm, which is the same as maximum of shortest distance values
         max_dist = max(dist.values())
         return max_dist if max_dist != float('inf') else -1 # Check if all nodes can be reached or not.
 ```
@@ -111,7 +117,6 @@ class Solution:
 ## 3 [Maximum Spending After Buying Items](https://leetcode.com/problems/maximum-spending-after-buying-items/description/)
 
 ### 3.1 Brute Force
-
 
 We are given an $m \times n$ matrix, and we can take out values only from the right end of each row. Further, the ammount spent on a day is defined as ```day number * value of the product```. 
 
@@ -126,7 +131,7 @@ Here's the pseudocode:
     - Multiply the minimum with the day counter and add this to the max spending. 
 
 Time Complexity: $O(m^2n)$
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def maxSpending(self, values: List[List[int]]) -> int:
