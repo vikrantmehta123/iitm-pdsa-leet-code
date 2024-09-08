@@ -20,7 +20,7 @@ In this repository, you will find a solution explanations and code implementatio
 
 ## 🏗️ Repository Structure
 
-This repository is organized into multiple directories, one for each week of the course. Inside each week's directory, you will find a file named `Questions.md` that contains:
+This repository is organized into multiple files, one for each week of the course. Each file contains:
 
 - **📝 LeetCode Questions**: A list of problems to solve, relevant to the week's topics.
 - **🧠 Solution Approach**: An explanation of the thought process and strategies for solving the problems.

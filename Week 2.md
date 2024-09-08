@@ -7,31 +7,29 @@
 
 ## 1. [Longest Subsequence With Limited Sum](https://leetcode.com/problems/longest-subsequence-with-limited-sum/description/)
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
+*Test Case 1:*
 
 ```nums = [4, 5, 2, 1], queries = [3, 10, 21]```
 
-Explanation:
-For queries[0] = 3: The longest subsequence we can take from nums is [2, 1] because 2 + 1 = 3, which has 2 elements. So, the answer is 2.
-For queries[1] = 10: We can take [4, 2, 1], with a sum of 7, which has 3 elements. So, the answer is 3.
-For queries[2] = 21: We can take the whole array [4, 5, 2, 1], with a sum of 12, which has 4 elements. So, the answer is 4.
+*Explanation:*
+
+For `queries[0] = 3`: The longest subsequence we can take from nums is `[2, 1]` because $2 + 1 = 3$, which has 2 elements. So, the answer is 2. If we add any other element, the sum becomes greater than 3. Note that in a subsequence, you can drop certain elements but the relative order stays same. 
+
+For `queries[1] = 10`: We can take `[4, 2, 1]`, with a sum of $7$, which has 3 elements. So, the answer is 3.
+
+For `queries[2] = 21`: We can take the whole array `[4, 5, 2, 1]`, with a sum of 12, which has 4 elements. So, the answer is 4.
 
 ### 1.1: Brute Force
-- To find out the maximum number of elements less than or equal to some number, just add the smallest numbers. 
+- To find out the maximum number of elements less than or equal to some number, just add the *smallest* numbers. 
 - Sort the list first.
 - For every query in ```queries```, find out how many elements can be added by iterating over the array ```nums```.
-- Complexity: $ O(mn) $
-##### Code:
+- Complexity: $ O(m \cdot n) $
+#### 💻 Code Implementation:
 ```
 class Solution(object):
-    def answerQueries(self, nums, queries):
-        """
-        :type nums: List[int]
-        :type queries: List[int]
-        :rtype: List[int]
-        """
+    def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
         answer = [ 0 for i in range(len(queries))]
         nums.sort() # Sort so that adding smallest elements is easier
 
@@ -55,10 +53,10 @@ class Solution(object):
 
 ### 1.2 Prefix Sum
 - Sort the list first. 
-- Keep a ```prefix_sum``` array that has this interpretation: ```i```th index stores the sum of first ```i``` smallest elements. Note that this array will be sorted.
-- For each ```queries[i]```, use binary search on ```prefix_sum``` to find out the largest element less than equal to ```queries[i]```
-- Complexity: $O(nlogn)$
-##### Code:
+- Keep a ```prefix_sum``` array that has this interpretation: `i`th index stores the sum of first `i` smallest elements. Note that this array will be sorted.
+- For each ```queries[i]```, use binary search on `prefix_sum` to find out the largest element less than equal to ```queries[i]```
+- Complexity: $O(n \cdot log(n))$
+#### 💻 Code Implementation:
 ```
 class Solution:
     def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
@@ -93,21 +91,23 @@ class Solution:
 
 ## 2. [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/description/)
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
-```nums= [ 1, 1, 1, 2, 2, 3], k = 2```
+*Test Case 1:*
 
-Explanation:
+`nums= [ 1, 1, 1, 2, 2, 3], k = 2`
+
+*Explanation:*
+
 In this test case, the number $1$ occurs thrice, the number $2$ occurs twice, and the number $3$ occurs once. Since we have to return top $2$ most frequent numbers, we return $1$ and $2$. Important to note here is that the question says nothing about whether the ```nums``` array is sorted or not. If it is not explicitly given in the question, we cannot assume it.
 
 ### 2.1 Using Dictionaries and Sorting
-- Initialize a dictionary. For every element in ```nums```, you count occurrences of that element. We can do this in a single pass. Plus this has the added benefit of eliminating duplicates, which we will use later. 
-- For every unique element from the ```nums``` array, create a new 2D array where each element is of the format: ```[element from nums, it's count]```
+- Initialize a dictionary. For every element in ```nums```, you count occurrences of that element. We can do this in a single pass. Plus this has the added benefit of eliminating duplicates, which we will use later. A useful library class to explore here is: `from collections import Counter`
+- For every unique element from the `nums` array, create a new 2D array where each element is of the format: `[element from nums, it's count]`
 - Sort this array based on the counts in descending order. 
 - Pick the first ```k``` elements.
-- Complexity: $O(mlogm)$, where $m$ is the number of unique elements in ```nums```.
-##### Code:
+- Complexity: $O(m \cdot log(m))$, where $m$ is the number of unique elements in ```nums```.
+#### 💻 Code Implementation:
 ```
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
@@ -129,7 +129,7 @@ class Solution:
         output = [ ]
 
         # O(k)
-        # Pick out the top k elements
+        # Pick out the top k elements. Note that we don't need counts. So we return L[i][0]
         for i in range(k):
             output.append(L[i][0])
 
@@ -140,7 +140,7 @@ class Solution:
 This problem is similar to what is discussed in one the practice programming assignments for this week, and we need to solve this problem in $O(n)$ complexity. 
 
 ### 3.1 Sort the ```nums``` in place
-We can simply sort the array ```nums``` in place are return it. We can use ```nums.sort()``` for this. But the comlpexity for this will be: $O(n log n)$. Can we do better?
+We can simply sort the array ```nums``` in place are return it. We can use ```nums.sort()``` for this. But the comlpexity for this will be: $O(n \cdot log (n))$. Can we do better?
 
 ### 3.2 Take Count of Colors 
 We know that there are only three distinct elements in the list. So can we count the occurrences for each distinct color element, and then replace the original array using these counts. 
@@ -153,7 +153,7 @@ counts[2] = 2
 
 Then for every color, we can replace ```nums[i]``` to ```nums[i + count]``` with the color.
 
-##### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def sortColors(self, nums: List[int]) -> None:
@@ -182,19 +182,24 @@ class Solution:
 
 ## 4. [Merge Intervals](https://leetcode.com/problems/merge-intervals/description/)
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
+*Test Case 1:*
+
 ```intervals = [[1,3], [2,6], [8,10], [15,18]]```
 
-Explanation:
+*Explanation:*
+
 We start with the first interval ```[1, 3]```. The next interval ```[2, 6]``` overlaps with ```[1, 3]```, so we merge them into ```[1, 6]```. The next interval ```[8, 10]``` doesn’t overlap with ```[1, 6]```, so we keep it as is. The last interval ```[15, 18]``` also doesn’t overlap with any previous intervals, so we keep it as is.
 
-**Test Case 2:**
+*Test Case 2:*
+
 ```intervals = [[1, 4], [2, 3], [5, 10]]```
 
-Explanation:
+*Explanation:*
+
 We start with the first interval ```[1, 4]```. The next interval ```[2, 3]``` overlaps with ```[1, 4]```. But note that the first interval subsumes this one. So the merged interval is: ```[1, 4]```
+
 The last interval ```[5, 10]``` doesn't overlap with any previous intervals so we keep it as it is. 
 
 ### 4.1  Sorting intervals
@@ -209,7 +214,7 @@ The last interval ```[5, 10]``` doesn't overlap with any previous intervals so w
 
 We also need to keep track of the start and the end of the merged intervals.
 
-##### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
