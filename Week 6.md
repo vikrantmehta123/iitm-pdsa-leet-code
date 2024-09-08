@@ -190,7 +190,7 @@ Here's the pseudocode:
 
 Time Complexity: $O(mn \cdot log(m))$
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Minheap:
     def __init__(self):
@@ -249,3 +249,49 @@ class Solution:
         return max_spending
 ```
 
+
+
+## 4. [Average of Levels in Binary Tree](https://leetcode.com/problems/average-of-levels-in-binary-tree/description/)
+
+### Using BFS:
+
+**📚 Problem Overview:**
+
+To find the average of values for each level of the tree, we need to process the tree **level-by-level**. Remember, a tree is just a graph with **no cycles** , so we can apply **graph algorithms** to trees too!
+
+When you hear "level-by-level," which algorithm comes to mind? 🤔
+
+Yep, good old **BFS** (Breadth-First Search)! BFS helps us traverse the tree one level at a time, which is exactly what we need here. For each level, we collect all the nodes, then simply compute the **average** of their values.😊
+
+#### 💻 Code Implementation:
+```
+from collections import deque
+
+class Solution:
+    def averageOfLevels(self, root: Optional[TreeNode]) -> List[float]:
+        q = deque()
+        q.append(root)
+
+        answer = []
+        
+        while q:
+            level_sum = 0 # The sum of the values of a given level
+            level_nodes = len(q)  # Number of nodes at the current level
+
+            # Since we use FIFO, this loop ensures that all nodes belonging to one level are popped
+            for i in range(level_nodes):
+                node = q.popleft()
+                
+                level_sum += node.val
+
+                # Add left and right children to the queue if they exist. These will be used in next iteration
+                if node.right: 
+                    q.append(node.right)
+                if node.left: 
+                    q.append(node.left)
+                    
+            # Calculate the average for the current level
+            answer.append(level_sum / level_nodes)
+
+        return answer
+```
