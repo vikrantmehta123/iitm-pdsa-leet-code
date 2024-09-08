@@ -5,6 +5,7 @@
 ##### 3. [Fibonacci Numbers](#3-fibonacci-numbers-1)
 ##### 4. [Triangle](#4-triangle-1)
 ##### 5. [Coin Change](#5-coin-change-1)
+##### 6. [Best Time to Buy and Sell Stock III](#6-best-time-to-buy-and-sell-stock-iii-1)
 
 ## 1. [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/description/)
 
@@ -238,4 +239,105 @@ class Solution:
         
         # If dp[amount] is still inf, it means it's not possible to make that amount with given coins
         return dp[amount] if dp[amount] != float('inf') else -1
+```
+
+## 6. [Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/)
+
+### 6.1 Using Dynamic Programming
+
+**📚 Problem Overview:**
+
+We need to find the maximum profit we can earn by buying and selling a stock at most two times. We need to buy before we can sell the stock. Further, we are allowed to transact either once or twice but not more than twice. 
+
+**🤔 Key Observations:**
+
+Since we’re allowed to make *two transactions*, for any given day, the total profit is the sum of:
+
+1. Maximum profit *before* that day.
+2. Maximum profit *after* that day.
+
+For example, let’s take the prices list: `[3, 3, 5, 0, 0, 3, 1, 4]`.
+
+🔹 On *day 3* (price = 0):
+   - Maximum Profit *before* day 3: The best time to buy and sell *before* day 3 is buying at 3 (day 0) and selling at 5 (day 2). So, *5 - 3 = 2*.
+   - Maximum Profit *after* day 3: The best time to buy *after* day 3 is buying at 0 (day 3) and selling at 4 (day 7). So, *4 - 0 = 4*.
+
+By adding them together, the total profit on day 3 would be **2 + 4 = 6**.
+
+We repeat this process for each day to find the total maximum profit. The day with the highest total profit is where we should ideally transact to make the most money!
+
+The key idea here is that we can compute the **before** and **after** arrays in **linear time**.
+
+For the *after* array:
+   - We start from the end of the prices list and keep track of the *largest number* we’ve seen so far. This largest number will be the *selling price* for any `prices[i]` we see along the way.
+   - So, for each day, the profit is the difference between the *largest number* (sell price) and `prices[i]` (buy price).
+
+We can do a similar thing for the *before* array, but instead of keeping track of the largest number, we will track *smallest* number.
+
+#### 💻 Code Implementation:
+```
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        after = [ 0 ] * n
+        max_from_right = prices[-1]
+
+        # Find out the maximum profit we can earn in one transaction after an index 'i'
+        for i in range(n - 2, -1, -1):
+            max_from_right = max(max_from_right, prices[i + 1])
+            after[i] = max(max_from_right - prices[i], 0)
+            after[i] = max(after[i], after[i + 1])
+
+        # Find out the maximum profit we can earn in one transaction before an index 'i'
+        before = [ 0 ] * n
+        min_from_left = prices[0]
+        for i in range(1, n):
+            min_from_left = min(min_from_left, prices[i - 1])
+            before[i] = max(prices[i] - min_from_left, 0)
+            before[i] = max(before[i], before[i - 1])
+        
+        # Total Profit[i] = before[i] + after[i]
+        # Maximum total profit = max(Total Profit)
+        max_profit = 0 
+        for i in range(n):
+            max_profit = max(before[i] + after[i], max_profit)
+
+        return max_profit
+```
+
+## 7. [Unique Paths-II](https://leetcode.com/problems/unique-paths-ii/description/)
+
+### 7.1 Using Dynamic Programming
+
+This is the grid paths with barriers problem discussed in the lecture. We will use the same idea and the code to solve this problem.
+
+#### 💻 Code Implementation:
+```
+import numpy as np
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        x, y = len(obstacleGrid), len(obstacleGrid[0])
+
+        M = np.zeros((x,y))
+
+        # Handle corner case where the starting cell has a barrier
+        if obstacleGrid[0][0] == 0: M[0, 0] = 1
+        else: M[0, 0] = 0
+
+        # Initialize the base cases
+        for i in range(x):
+            for j in range(y):
+                if i == 0 and j > 0 and (obstacleGrid[i][j] == 0):
+                    M[i,j] = M[i, j - 1]
+                if j == 0 and i > 0 and (obstacleGrid[i][j] == 0):
+                    M[i, j] = M[i - 1, j]
+                
+        # If there is obstacle, then there are 0 ways. Else we sum the left and bottom ways
+        for i in range(1,x):
+            for j in range(1,y):
+                if obstacleGrid[i][j] == 1:
+                    M[i,j] = 0
+                else:
+                    M[i,j] = M[i-1,j] + M[i,j-1]
+        return int(M[x-1,y-1])
 ```
