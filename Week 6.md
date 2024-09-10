@@ -3,10 +3,29 @@
 ##### 1. [Validate Binary Search Tree](#1-validate-binary-search-tree-1)
 ##### 2. [Network Delay Time](#2-network-delay-time-1)
 ##### 3. [Maximum Spending After Buying Items](#3-maximum-spending-after-buying-items-1)
+##### 4. [Average of Levels in Binary Tree](#4-average-of-levels-in-binary-tree-1)
 
 ## 1. [Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/description/)
 
 ### 1.1 Using Inorder Traversal
+
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
+`root = [ 2, 1, 3]`
+
+*Explanation:*
+
+This is the first test case from the problem description. A valid binary search tree is a one where every node's left child has value less than the node, and the right child has a value greater than the node. That is: $left < current < right$. We can see from the tree that this is indeed the case. So, it is a valid binary search tree. 
+
+*Test Case 2:*
+
+`root = [ 5, 1, 4, None, None, 3, 6]`
+
+*Explanation:*
+
+This is the second test case from the problem description. The node with value $4$ is the right child of the node with value $5$. This violates the conditions of a binary search tree. So, we return False. Note that this violation can occur in any internal node- not just the root node. 
 
 **📚 Problem Overview:**
 
@@ -14,7 +33,7 @@ In a *binary search tree* (BST), the *inorder traversal* gives a *sorted list* o
 
 **💡 Approach:**
 
-1. Perform *inorder traversal* on the tree.
+1. Do *inorder traversal* on the tree.
 2. Check if the result is *sorted* by comparing each element with the previous one.
 
 If the list is sorted, the tree is a valid BST. If not, it's invalid.
@@ -49,13 +68,23 @@ class Solution:
 ```
 
 
-
 ## 2. [Network Delay Time](https://leetcode.com/problems/network-delay-time/description/)
 
 ### 2.1 Using Dijkstra
 
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
+`times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2`
+
+*Explanation:*
+
+This is the first test case from the problem description. Starting node is given as $k=2$. From $2$, it will take 1 unit of time to reach both nodes 1 and 3. The signal can travel along both edges in parallel. So reaching both nodes only takes 1 unit of time. But we still have one more node left. After reaching node 3, it will take another 1 unit of time to reach node 4. Once the last node is reached, we return the time taken. In this case, it was 2. Can you relate this to the analogy discussed in one of the lectures?
+
 **📚 Problem Overview:**
-We have an array times where each element `times[i] = [u, v, w]` represents a directed edge from node `u` to node `v` with weight `w`. This is a directed graph. 
+
+We have an array times where each element `times[i] = [u, v, w]` represents a directed edge from node `u` to node `v` with weight `w`. The edges are directed and weighted. 
 
 Can you convert the `times` array into a graph?\
 We can represent the `times` array as an adjacency list:
@@ -116,19 +145,23 @@ class Solution:
 
 ## 3 [Maximum Spending After Buying Items](https://leetcode.com/problems/maximum-spending-after-buying-items/description/)
 
+**🎯 Understanding the Test Cases:**
+
+The test cases given in the problem statement are detailed. So we have not discussed them here. One thing to note in the given test cases: The order in which possible values are getting removed from the matrix is from smallest to largest. Can you think of the reason why?
+
 ### 3.1 Brute Force
 
-We are given an $m \times n$ matrix, and we can take out values only from the right end of each row. Further, the ammount spent on a day is defined as ```day number * value of the product```. 
+We are given an $m \times n$ matrix, and we can take out values only from the right end of each row. Further, the amount spent on a day is defined as ```day number * value of the product```. 
 
 To maximize spending over ```m * n``` days, can you think of which element do we need to remove first?
-They should be the minimum elements, because the spending can be maximized if larger values are taken near the end of ```m * n```th day. So, from each rows' last column, we need to pop the one that is the smallest. 
+It should be the smallest element that we can remove, because the spending can be maximized if larger values are taken near the end of ```m * n```th day. So, from each rows' last column, we need to pop the one that is the smallest. 
 
-Here's the pseudocode:
+*Pseudocode:*
 - Keep a variable for max spending.
 - Iterate day counter $ m \times n$ times
     - Keep a minimum value variable. 
-    - For every row, compare the last element of it with this minimum value
-    - Multiply the minimum with the day counter and add this to the max spending. 
+    - Find out the minimum last element for every row- since we can only take elements from the rightmost end.
+    - Pop and multiply the minimum with the day counter and add this to the max spending. 
 
 Time Complexity: $O(m^2n)$
 #### 💻 Code Implementation:
@@ -250,8 +283,17 @@ class Solution:
 ```
 
 
-
 ## 4. [Average of Levels in Binary Tree](https://leetcode.com/problems/average-of-levels-in-binary-tree/description/)
+
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
+`root = [3,9,20,null,null,15,7]`
+
+*Explanation:*
+
+In the given figure, the first level has only one node. So the average of 1st level is: $3$. In the second level, there are two nodes: 9 and 20. So, the average of the second level is: $\dfrac{(9 + 20 )}{2}$. Similarly, the third level has two nodes: 15 and 7. So, the average of the third level is: $\dfrac{(15 + 7)}{2}$. In general, if there are $n$ nodes in a level, we need to return average as: $\dfrac{\text{sum of the n nodes' values}}{n}$
 
 ### Using BFS:
 
@@ -284,7 +326,8 @@ class Solution:
                 
                 level_sum += node.val
 
-                # Add left and right children to the queue if they exist. These will be used in next iteration
+                # Add left and right children to the queue if they exist. 
+                # Nodes in binary tree have at most 2 neighbors only- the right and left child
                 if node.right: 
                     q.append(node.right)
                 if node.left: 
