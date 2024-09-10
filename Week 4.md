@@ -10,19 +10,21 @@
 
 ## 1. [Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/description/)
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
+*Test Case 1:*
+
 ```n = 3, trust = [[1, 3], [2, 3]]```
 
-Explanation: 
+*Explanation:*
 
 There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trusts Person 3. Person 3 doesn't trust anyone, and both other people trust Person 3. This means Person 3 meets the conditions of being the town judge: trusted by everyone but trusts nobody. Hence, he is the town judge. 
 
-**Test Case 2:**
+*Test Case 2:*
+
 ```n = 3, trust = [[1, 3], [2, 3], [3, 1]]```
 
-Explanation:
+*Explanation:*
 
 There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trusts Person 3. Person 3 trusts Person 1, which means Person 3 is not trusted by everyone (because Person 1 and Person 2 trust Person 3, but Person 3 also trusts Person 1). The town judge must trust nobody and be trusted by everyone else. Since Person 3 doesn't meet this condition (because they trust Person 1), there is no town judge. So we return -`.
 
@@ -33,22 +35,22 @@ There are 3 people in the town. Person 1 trusts Person 3, and Person 2 also trus
 We have an array `trusts`, where each entry `trust[i] = [a_i, b_i]` tells us that `a_i` trusts `b_i`. What if we turned this into a graph? 
 
 - **Question:** If `a_i` trusts `b_i`, how could we represent this in a graph?  
-If ```a_i_``` trusts ```b_i_```, then we can consider it an edge from ```a_i_``` to ```b_i_```. 
+If ```a_i``` trusts ```b_i```, then we can consider it an edge from ```a_i``` to ```b_i```. 
 
 **Finding the Town Judge:**
 
 The town judge is a person who:
 
 1. *Trusts no one* $\implies$ *Outdegree = 0*
-2. *Is trusted by everyone* $\implies$ *Indegree = n - 1*
+2. *Is trusted by everyone except himself* $\implies$ *Indegree = n - 1*
 
 To solve this, we can use dictionaries:
 
-1. *Indegree Dictionary* 📥: Tracks how many people trust each person.
-2. *Outdegree Dictionary* 📤: Tracks how many people each person trusts.
+1. *Indegree Dictionary* : Tracks how many people trust each person.
+2. *Outdegree Dictionary* : Tracks how many people each person trusts.
 
 - How can we use these dictionaries to find the town judge?  
-we can check if someone has an outdegree of 0 and an indegree of `n-1`. Since the town judge is unique, whenever we find such person, we can return it.
+We can check if someone has an outdegree of 0 and an indegree of `n-1`. Since the town judge is unique, whenever we find such person, we can return it.
 
 Time complexity: $O(n)$:
 
@@ -87,19 +89,21 @@ class Solution:
 ## 2. [Course Schedule-I](https://leetcode.com/problems/course-schedule/description/)
 
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
+*Test Case 1:*
+
 ```numCourses = 3, prerequisites = [[1,0], [2, 1]]```
 
-Explanation:
+*Explanation:*
 
 There are a total of 3 courses to take. To take course $1$ you should have finished course $0$. To take the course $2$, you need to finish course $1$. If a student decides to pursue courses as follows: $0, 1, 2$, then all courses can be completed. So we return ```True```.
 
-**Test Case 2:**
+*Test Case 2:*
+
 ```numCourses = 2, prerequisites = [[1,0], [0, 1]]```
 
-Explanation: 
+*Explanation:*
 
 There are a total of $2$ courses to take. To take course $1$ you should have finished course $0$. To take the course $0$, you need to finish course $1$. It is not possible for a student to complete both courses. So we return ```False```. In essence, there is a cycle in the prerequisites.
 
@@ -107,15 +111,14 @@ There are a total of $2$ courses to take. To take course $1$ you should have fin
 
 🔍 Problem Understanding:
 
-We have a list of prerequisites where each pair `prerequisites[i] = [a_i, b_i]` means that you need to complete `b_i` before taking `a_i`. In simpler terms, `a_i` depends on `b_i`. How can we convert this into a graph?
-
-Now, the big question: how do we find a sequence of courses that respects all the dependencies? 🤔 Which algorithm should you use?
+We have a list of prerequisites where each pair $prerequisites[i] = [a_i, b_i]$ means that you need to complete $b_i$ before taking $a_i$. In simpler terms, $a_i$ depends on $b_i$. How can we convert this into a graph? And, the big question: how do we find a sequence of courses that respects all the dependencies? 🤔 Which algorithm should we use?
 
 We can use topological sorting to get this sequence. 
 
-If `b_i` needs to be completed before `a_i`, we add a directed edge from `b_i` to `a_i`. Note the direction of the edge. For this problem, we are converting the `prerequisites` array into graph using adjacency matrix. Once we have converted this problem into a graph problem, we can use the topological sorting.
+If $b_i$ needs to be completed before $a_i$, we add a directed edge from $b_i \rightarrow a_i$. Note the direction of the edge. For this problem, we are converting the `prerequisites` array into graph using adjacency matrix. Once we have converted this problem into a graph problem, we can use the topological sorting.
 
-When could we say that we have successfully found the sequence of courses satisfying the dependencies? 
+**Question:** When would we say that we have successfully found the sequence of courses satisfying the dependencies? 
+
 When we the sequence includes all the courses, and no course is left. If a course is left out, there’s likely a cycle or unresolved dependency.
 
 #### 💻 Code Implementation:
@@ -174,7 +177,7 @@ Here's how:
 - Keep a deque for vertices with zero degree queue such that the insert at end and delete from start operations are both constant time.
 - Keep a dictionary of indegrees which counts the indegrees for each vertex
 
-Complexity: $O(|V| + |E|)
+Time Complexity: $O(|V| + |E|)$
 
 #### 💻 Code Implementation:
 
@@ -227,9 +230,9 @@ We can use the same approaches discussed in the above question.
 
 ## 4. [Snakes and Ladders](https://leetcode.com/problems/snakes-and-ladders/description/)
 
-🎯 Understanding the Test Cases:
+**🎯 Understanding the Test Cases:**
 
-**Test Case 1:**
+Please refer to the *Problem Overview* where we have discussed the first test case.
 
 ### 4.1 Using BFS
 
@@ -238,9 +241,9 @@ We can use the same approaches discussed in the above question.
 We have a board with $n^2$ cells, and from any cell, we can make up to 6 possible moves. Can we turn this into a graph? Yes! Here's how:
 
 1. Start at cell 1.
-2. We can roll a dice and move to next six cells. In the first test cases, the next possible moves are: 15, 3, 4, 5, 6, 7 (because cell 2 has a ladder to 15). If cell has $-1$ value, then it's an empty cell. But if it has a different value, then it is either a snake or a ladder.
+2. We can roll a dice and move to next six cells. In the first test cases, the next possible moves are: 15, 3, 4, 5, 6, 7 (because cell 2 has a ladder to 15). If a cell has $-1$ value, then it's an empty cell. But if it has a different value, then it is either a snake or a ladder.
 3. Each possible move from a cell is an edge in our graph.
-4. once we have the graph, We need to find the least number of moves required to go from cell 1 to cell $n^2$. This is a **shortest path** problem where there are no weights on the edges- we can use *Breadth-First Search (BFS)*. 
+4. Once we have the graph, We need to find the least number of moves required to go from cell 1 to cell $n^2$. This is a **shortest path** problem where there are no weights on the edges- we can use *Breadth-First Search (BFS)*. 
 
 
 *Pseudocode:*
@@ -303,7 +306,7 @@ class Solution:
         n = len(board)
         AList = {i:set() for i in range(1, n*n + 1)}
         for i in range(1, n*n + 1):
-            for j in range(i + 1, min(i + 7, n*n + 1)):
+            for j in range(i + 1, min(i + 7, n*n + 1)): 
                 row, col = self.get_indices(j, n)
                 val = board[row][col]
                 if val == -1:
@@ -327,6 +330,7 @@ class Solution:
 ### 5.1 Using Topological Sort
 
 📚 **Problem Overview:**
+
 We need to order a list of items so that all items in the same group are listed next to each other. Additionally, some items have dependencies, meaning one item must be completed before another. We can use topological sort to solve this problem.
 
 🤔 **The Issue:**
@@ -350,9 +354,10 @@ Item 2 must come before Item 4\
 Item 1 must come before Item 2\
 This means the correct order should be: 1 → 2 → 4.\
 
-The problem arises when choosing between Item 1 and Item 3, as both have no dependencies. If we choose Item 3 first, we should list the other items from Group 1 next to it, leading to an order like this: 3, 4. This leaves us with Group 0 and the sequence 1, 2. The final order would be 3, 4, 1, 2, which breaks the dependency 1 → 2 → 4.
+The problem arises when choosing between Item 1 and Item 3, as both have no dependencies. If we choose Item 3 first, we should list the other items from Group 1 next to it, leading to an order like this: 3, 4. This leaves us with Group 0 and the sequence 1, 2. The final order would be 3, 4, 1, 2, which breaks the dependency 1 → 2 → 4. (Draw these nodes and edges to get a clearer picture!)
 
 💡 **The Solution:**
+
 To solve this, we need to track the dependencies of both individual items and groups. Here’s how we can do that:
 
 - Create Two Graphs:
@@ -380,7 +385,9 @@ class Solution:
 
     def preprocessing(self, beforeItems, group, m, n, groupwise_items):
         """
-        Given the beforeItems array, this function converts it into two graphs- Groups and Items. Along with it, we are also returning the indegrees of each of the graphs' nodes so that we can smoothly run topological sort. 
+        Given the beforeItems array, this function converts it into two graphs- Groups and Items. 
+        Along with it, we are also returning the indegrees of each of the graphs' nodes so that we 
+        can smoothly run topological sort. 
         """
         group_indegree, items_indegree = {}, {i:0 for i in range(n)}
         items_alist =  {i:[] for i in range(n)}
@@ -408,11 +415,11 @@ class Solution:
         for key in group_alist.keys():
             group_alist[key] = list(group_alist[key])
 
-        for u in group_alist.keys():
-            for v in group_alist[u]:
-                if v not in group_indegree:
-                    group_indegree[v] = 0
-                group_indegree[v] += 1
+        for start_node in group_alist.keys():
+            for end_node in group_alist[u]:
+                if end_node not in group_indegree:
+                    group_indegree[end_node] = 0
+                group_indegree[end_node] += 1
 
         return items_alist, group_alist, items_indegree, group_indegree
 
@@ -478,9 +485,13 @@ class Solution:
 
 ### 6.1 Using BFS
 
+**🎯 Understanding the Test Cases:**
+
+We have not discussed test cases as it is an easy problem.
+
 📚 **Problem Overview:**
 
-We need to figure out if we can go from a source node to a destination node. This is a reachability problem in a graph. We know we can use *BFS* or *DFS* on an adjacency list or a matrix for reachability problem 
+We need to figure out if we can go from a source node to a destination node. This is a reachability problem in a graph. We know we can use *BFS* or *DFS* on an adjacency list or a matrix for reachability problem. 
 
 Can you convert the given `edges` list into an adjacency list or an adjacency matrix representation?
 - We have a list of edges where each `edges[i] = [u, v]` shows an edge between nodes `u` and `v`.
@@ -492,7 +503,7 @@ for u, v in edges:
 ```
 
 #### 💻 Code Implementation:
-Note: For a better, more neat code, we have used the ```deque``` data structure from the ```collections``` module in Python. We can use it to implement a ```queue``` used in BFS. 
+Note: For a better, more neat code, we have used the ```deque``` data structure from the ```collections``` module in Python. We can use it to implement a ```queue``` used in BFS. It's a useful data structure to know.
 
 ```
 from collections import deque
@@ -501,6 +512,8 @@ class Solution:
     def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
         adj_list = { i:[ ] for i in range(n) }
         visited = set()
+
+        # Create the adjacency list representation from Graph
         for u, v in edges:
             adj_list[u].append(v)
             adj_list[v].append(u)
@@ -520,6 +533,10 @@ class Solution:
 
 ## 7. [Number of Provinces](https://leetcode.com/problems/number-of-provinces/description/)
 
+
+**🎯 Understanding the Test Cases:**
+
+We have not discussed test cases as it is an easy problem.
 
 **📚 Problem Overview:**
 
@@ -575,13 +592,13 @@ class Solution:
         seen = 0
         
         while seen < len(isConnected):
-            startv = min([i for i in range(len(isConnected)) if components[i] == -1])
-            visited = self.BFS(isConnected, startv)
+            startvertex = min([i for i in range(len(isConnected)) if components[i] == -1])
+            visited = self.BFS(isConnected, startvertex)
 
             # For every vertex that was visited in the current run of BFS, update its component number and update 
             # the number of vertices seen.
-            for v in visited:
-                components[v] = component_number
+            for vertex in visited:
+                components[vertex] = component_number
                 seen += 1
 
             # Increment component number such that for the next run of BFS, 

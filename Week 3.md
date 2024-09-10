@@ -1,6 +1,5 @@
 # Leet Code Problems on Arrays, Stacks and Hashing
 
-##### 📋 Table of Contents:
 ##### 1. [Valid Parentheses](#1-valid-parentheses-1)
 ##### 2. [Longest Consecutive Sequence](#2-longest-consecutive-sequence-1)
 ##### 3. [Rotate List](#3-rotate-list-1)
@@ -15,17 +14,20 @@
 
 ### 1.1 Using Stacks
 
-🎯 Understanding the Test Cases
+**🎯 Understanding the Test Cases:**
 
-**Test Case 4:**
+*Test Case 1:*
+
 Input: ```s = "[()]"```
-Explanation: The string ```"([])"``` is valid because each open bracket has a matching closing bracket, and they close in the correct order. Since all brackets are properly paired, the string evaluates to ```True```.
 
-**Test Case 3:**
-Explanation: The string ```"(]"``` is invalid because the open bracket ```(``` is not closed by the correct type of bracket. The closing bracket ```]``` doesn’t match the opening ```(```, so the string evaluates to ```False```. 
+*Explanation:* The string ```"([])"``` is valid because each open bracket has a matching closing bracket, and they close in the correct order. Since all brackets are properly paired, the string evaluates to ```True```.
+
+*Test Case 2:*
+
+*Explanation:* The string ```"(]"``` is invalid because the open bracket ```(``` is not closed by the correct type of bracket. The closing bracket ```]``` doesn’t match the opening ```(```, so the string evaluates to ```False```. 
 
 
-🔍 Problem Understanding:
+**🔍 Problem Understanding:**
 
 We only have three types of brackets: ```[], (), {}```. And we need to close the last opened bracaket first. What do you do when you need to close the last opened bracket first? You need a system where the last thing you add is the first thing you take out, right? This is the Last In, First Out (LIFO) system. So, what data structure works best for LIFO? A **stack**! A stack can help us keep track of the brackets. Whenever we find an opening bracket, we push it onto the stack. When we encounter a closing bracket, we pop the stack to see if it matches the last opened bracket.
 
@@ -75,10 +77,15 @@ class Solution:
 
 ## 2. [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/description/)
 
-🎯 Understanding the Test Cases:
-**Test Case 1:**
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
 ```nums=[100, 4, 200, 1, 3, 2]```
-Explanation: The longest consecutive sequence in the array is [1, 2, 3, 4], which has a length of 4. Note that it is okay if the numbers do not appear contiguously in the array. For example, in this the number ```4``` occurs before the the other numbers in the sequence. All that we are asked is to return the length of the longest sequence whose elements are consecutive integers.
+
+*Explanation:* 
+
+The longest consecutive sequence in the array is [1, 2, 3, 4], which has a length of 4. Note that it is okay if the numbers do not appear contiguously or as a subsequence in the array. For example, in this the number ```4``` occurs before the the other numbers in the sequence. All that we are asked is to return the length of the longest sequence whose elements are consecutive integers.
 
 ### 2.1 Brute Force
 
@@ -88,8 +95,6 @@ You would look at each number and then search the entire array to see if the nex
 But what’s the problem with this approach? It takes a lot of time—specifically, the time complexity is $O(n^2)$. But we’re asked to find a solution that’s faster, with a time complexity of $O(n)$.
 
 ### 2.2 Improved Approach Using Sets
-
-🧠 Deep Dive:
 
 When using brute force, we had to search the entire array to check if the next number existed. Do you think there’s a way to speed up this check? What if we had a data structure that allows us to check if a number exists in constant time?
 
@@ -108,7 +113,7 @@ Which numbers can start a consecutive sequence?
 - Time Complexity: $O(n)$
 - Space Complexity: $O(n)$
 
-#### Code:
+#### 💻 Code Implementation:
 ```
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:    
@@ -139,12 +144,12 @@ class Solution:
 ```
 
 # Leet Code Problems on Linked Lists and Arrays
-Before you jump into these problems, read this:
+Before you jump into these problems:
 1. When solving Linked List problems, **ALWAYS** draw the diagrams. 
 2. Whenever you see a Linked List problem, the first thing that you should do is: handle the base / edge cases like an empty linked list or a list with just one node. It'll save you a lot of time and stress, especially during the OPPE!
 
 ## 3. [Rotate List](https://leetcode.com/problems/rotate-list/description/)
-### 3.1 🔄 Rotation Logic:
+### 3.1 Rotation Logic:
 - If $k \gt n$, then the number of effective rotations is: $k = k \mod n$. 
 - Think about this as a three step problem:
     1. First, traverse $k$ nodes. This ```n - k```th node becomes the ```newhead``` of the rotated list.
