@@ -25,10 +25,12 @@ There are three ways to reach the third step:
 - $0$ $\rightarrow$ $1$ $\rightarrow$ $3$. Here, we jumped $2$ places from the $1$ st step. 
 - $0$ $\rightarrow$ $2$ $\rightarrow$ $3$. Here, we jumped $2$ places from the $0$ th step, and then $1$ step from the $2$ nd step.
 
+Since there are three ways we return 3.
+
 **🤔 Key Observations:**
 
 - *Base Cases*:
-    - To reach step `0`, you don't need to take $0$ steps ( no need to take any step!).
+    - To reach step `0`, you need to take $0$ steps ( no need to take any step!).
     - To reach step `1`, there is only $1$ way. 
     - To reach step $2$, there are two ways: $ 0 \rightarrow 1 \rightarrow 2$ and $0 \rightarrow 2 $
 
@@ -77,9 +79,11 @@ class Solution:
 ### 2.1 Using Dynamic Programming
 
 **📚 Problem Overview:**
+
 You need to rob houses along a street, but you can’t rob two *adjacent houses*. The goal is to figure out the *maximum amount of money* you can rob, without breaking the adjacency rule.
 
 **🤔 Key Observations:**
+
 - If you're at the *first house*, you can only rob that house. 
   - So, the maximum money you can rob up to house $1$ is just `nums[0]`.
   
@@ -91,13 +95,14 @@ You need to rob houses along a street, but you can’t rob two *adjacent houses*
   - *Skip* this house and keep the money robbed up to the previous house.
 
 **💡 The Solution:**
-We use a *dynamic programming array* `maximum_amount` where each `maximum_amount[i]` holds the max money you can rob *up to* house `i`:
+
+We use a dynamic programming array `maximum_amount` where each `maximum_amount[i]` holds the maximum money you can rob *up to* house `i`:
 - *Base cases*:
   - `maximum_amount[0] = nums[0]`
   - `maximum_amount[1] = max(nums[0], nums[1])`
   
 - *Recursive relation:*
-  - $maximum_amount[i] = max(maximum_amount[i-1], maximum_amount[i-2] + nums[i])$
+  - $maximum\_amount[i] = max(maximum\_amount[i-1], maximum\_amount[i-2] + nums[i])$
   
 This ensures that for each house, you decide whether to rob it (and add the money from two houses ago) or skip it (and take the max up to the last house). The result will be the value in `maximum_amount[n-1]`, where `n` is the total number of houses.
 
