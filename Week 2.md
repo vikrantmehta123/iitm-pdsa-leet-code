@@ -5,6 +5,7 @@
 ##### 3. [Sort Colors](#3-sort-colors-1)
 ##### 4. [Merge Intervals](#4-merge-intervals-1)
 
+
 ## 1. [Longest Subsequence With Limited Sum](https://leetcode.com/problems/longest-subsequence-with-limited-sum/description/)
 
 **🎯 Understanding the Test Cases:**
@@ -242,4 +243,59 @@ class Solution:
         merged_intervals.append([current_start, current_end])
         
         return merged_intervals
+```
+
+## 5. [Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/description/)
+
+**🎯 Understanding the Test Cases:**
+
+This is a simple search problem, so the test cases are not discussed.
+
+### 5.1 Using Binary Search
+
+📚 **Problem Overview:**
+
+We need to find the element in $log(n)$ time. When you see $log(n)$, what do you think of? Of course, Binary search! This question has been asked in PYQs, so better to understand it well.
+
+**💡 The Solution:**
+1. At any `mid` index, there are two possibilities: either the *left half* of the array is sorted, or the *right half* is.
+2. If the *left side is sorted*:
+    - Check if the target within this range?
+        - If yes, do a binary search on the left half. 
+        - If no, explore the right half.
+3. If the *right side is sorted*:
+    - Again, check if the target is in this range.
+        - If yes, perform binary search on the right half. 
+        - If no, explore to the left side.
+
+#### 💻 Code Implementation:
+```
+class Solution:
+    def search(self, nums, target):
+        left, right = 0, len(nums) - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+            
+            # If the target is found
+            if nums[mid] == target:
+                return mid
+            
+            # Check if the left half is sorted
+            if nums[left] <= nums[mid]:
+                # If the target lies within the sorted left half
+                if nums[left] <= target < nums[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            # Otherwise, the right half is sorted
+            else:
+                # If the target lies within the sorted right half
+                if nums[mid] < target <= nums[right]:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+        
+        # If the target is not found
+        return -1
 ```
