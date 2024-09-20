@@ -4,7 +4,7 @@
 ##### 2. [Top K Frequent Elements](#2-top-k-frequent-elements-1)
 ##### 3. [Sort Colors](#3-sort-colors-1)
 ##### 4. [Merge Intervals](#4-merge-intervals-1)
-
+##### 5. [Search in Rotated Sorted Array](#5-search-in-rotated-sorted-array-1)
 
 ## 1. [Longest Subsequence With Limited Sum](https://leetcode.com/problems/longest-subsequence-with-limited-sum/description/)
 
@@ -298,4 +298,79 @@ class Solution:
         
         # If the target is not found
         return -1
+```
+
+## 6. [Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/)
+
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
+`nums = [5,7,7,8,8,8,10], target = 8`
+
+*Explanation:*
+
+We need to find the starting and ending indices of the target number 8. In this case, 8 appears three times, so we return the range [3, 5], where index 3 is the first occurrence and index 5 is the last.
+
+### 5.1 Using Binary Search
+
+📚 **Problem Overview:**
+
+Again, we need a $log(n)$ solution. So, we think Binary Search to come up with a solution. 
+
+**💡 The Solution:**
+
+We know binary search is fast, but it stops when we find the target. What if we keep going to find both the first and last occurrences?
+
+Here's how we can do it:
+
+*Leftmost Occurrence:*
+- Run a binary search, but when you find 8, don't stop! Keep searching the left half to find the first occurrence.
+
+*Rightmost Occurrence:*
+- Similar idea, but now after finding 8, explore the right half to find the last occurrence.
+
+By running two binary searches, we find both boundaries of the target range in $O(\log n)$ time. 
+
+#### 💻 Code Implementation:
+```
+class Solution:
+    def searchRange(self, nums, target):
+        def findLeft(nums, target):
+            leftmost_occurrence = -1
+            # Finds the left most index of target number
+            left, right = 0, len(nums) - 1
+            while left <= right:
+                mid = (left + right) // 2
+                if nums[mid] < target:
+                    left = mid + 1
+                elif nums[mid] == target:
+                    leftmost_occurrence = mid
+                    right = mid - 1
+                else:
+                    right = mid - 1
+            return leftmost_occurrence
+        
+        def findRight(nums, target):
+            # Finds rightmost index of target
+            rightmost_occurrence = -1
+            left, right = 0, len(nums) - 1
+            while left <= right:
+                mid = (left + right) // 2
+                if nums[mid] < target:
+                    left = mid + 1
+                elif nums[mid] == target:
+                    rightmost_occurrence = mid
+                    left = mid + 1
+                else:
+                    right = mid - 1
+            return rightmost_occurrence
+        
+        leftmost_occurrence = findLeft(nums, target)
+        rightmost_occurrence = findRight(nums, target)
+        
+        # Check if the target is not found
+        if leftmost_occurrence == -1:
+            return [-1, -1]
+        return [leftmost_occurrence, rightmost_occurrence]
 ```

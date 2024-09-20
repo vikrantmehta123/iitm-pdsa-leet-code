@@ -1,8 +1,9 @@
 # Leet Code Problems on Shortest Path and Minimum Cost Spanning Trees
 
 ##### 1. [Min Cost To Connect All Points](#1-min-cost-to-connect-all-points-1)
-##### 2. [Cheapest Flight Within K Stops](#2-cheapest-flight-within-k-stops-1)
-##### 3. [Path with Maximum Probability](#3-path-with-maximum-probability-1)
+##### 2. [Path with Maximum Probability](#2-path-with-maximum-probability-1)
+##### 3. [Cheapest Flight Within K Stops](#3-cheapest-flight-within-k-stops-1)
+
 
 ## 1. [Min Cost To Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/description/)
 
@@ -99,9 +100,7 @@ class Solution:
         return minimum_cost
 ```
 
-
-
-## 2. [Cheapest Flight Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
+## 2. [Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/description/)
 
 **🎯 Understanding the Test Cases:**
 
@@ -110,7 +109,75 @@ class Solution:
 *Explanation:*
 
 
-### 2.1 Using Bellman-Ford
+### 2.1 Using Dijkstra
+
+### 📚 Problem Overview:
+
+We need to find the *maximum probability* of getting from a `start_node` to an `end_node` in a graph. Each edge in the graph has a *success probability*, and we want to maximize the total probability along the path. For example, if there's a path `A -> B -> C` with probabilities `A -> B = 0.5` and `B -> C = 0.5`, the total probability for the path `A -> C` is $0.5 \times 0.5 = 0.25$.
+
+**💡 The Solution:**
+
+It’s similar to finding the shortest path, but here we are finding the *path with the highest probability*!
+
+1. *Create a Graph:*
+   - We create an adjacency list where each node is connected to its neighbors with the probability of success for each edge.
+
+2. *Max-Heap*:
+   - To keep track of the most promising path, we use a *max-heap*. But since Python’s `heapq` is a *min-heap*, we store *negative probabilities* (because minimizing negatives is same as maximizing positives).
+
+3. *Dijkstra’s Algorithm*:
+   - We run *Dijkstra’s algorithm*, but instead of minimizing distance, we maximize probability. Stop as soon as we reach the `end_node`.
+
+If we never reach the end node, we return `0.0` because there's no valid path! 
+
+#### 💻 Code Implementation:
+
+```
+class Solution:
+    def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start_node: int, end_node: int) -> float:
+        # Create an adjacency list
+        WList = defaultdict(list)
+        for i, (start, end) in enumerate(edges):
+            probab = succProb[i]
+            WList[start].append((end, probab))
+            WList[end].append((start, probab))
+
+        # Max-heap (negative probabilities to simulate a max-heap)
+        heap = [(-1.0, start_node)]  # (negative probability, node)
+        dist = [-1.0] * n            # Store the maximum probability to reach each node
+        dist[start_node] = 1.0        # Start node has a probability of 1
+
+        while heap:
+            # Pop the node with the maximum probability
+            current_prob, node = heapq.heappop(heap)
+            current_prob = -current_prob  # Convert back to positive
+
+            # If we reached the end node, return the probability
+            if node == end_node:
+                return current_prob
+
+            # Explore neighbors
+            for neighbor, weight in WList[node]:
+                new_prob = current_prob * weight
+                # Only update if we found a higher probability path to neighbor
+                if new_prob > dist[neighbor]:
+                    dist[neighbor] = new_prob
+                    heapq.heappush(heap, (-new_prob, neighbor))
+
+        # If we never reach the end node
+        return 0.0
+```
+
+
+## 3. [Cheapest Flight Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
+
+**🎯 Understanding the Test Cases:**
+
+*Test Case 1:*
+
+*Explanation:*
+
+### 3.1 Using Dijkstra
 
 #### 💻 Code Implementation:
 ```
@@ -155,52 +222,4 @@ class Solution:
         
         # If no valid route found
         return -1
-```
-
-
-## 3. [Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/description/)
-
-**🎯 Understanding the Test Cases:**
-
-*Test Case 1:*
-
-*Explanation:*
-
-
-#### 💻 Code Implementation:
-
-```
-class Solution:
-    def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start_node: int, end_node: int) -> float:
-        # Create an adjacency list
-        WList = defaultdict(list)
-        for i, (start, end) in enumerate(edges):
-            probab = succProb[i]
-            WList[start].append((end, probab))
-            WList[end].append((start, probab))
-
-        # Max-heap (negative probabilities to simulate a max-heap)
-        heap = [(-1.0, start_node)]  # (negative probability, node)
-        dist = [-1.0] * n            # Store the maximum probability to reach each node
-        dist[start_node] = 1.0        # Start node has a probability of 1
-
-        while heap:
-            # Pop the node with the maximum probability
-            current_prob, node = heapq.heappop(heap)
-            current_prob = -current_prob  # Convert back to positive
-
-            # If we reached the end node, return the probability
-            if node == end_node:
-                return current_prob
-
-            # Explore neighbors
-            for neighbor, weight in WList[node]:
-                new_prob = current_prob * weight
-                # Only update if we found a higher probability path to neighbor
-                if new_prob > dist[neighbor]:
-                    dist[neighbor] = new_prob
-                    heapq.heappush(heap, (-new_prob, neighbor))
-
-        # If we never reach the end node
-        return 0.0
 ```
