@@ -26,7 +26,7 @@ For `queries[2] = 21`: We can take the whole array `[4, 5, 2, 1]`, with a sum of
 - To find out the maximum number of elements less than or equal to some number, just add the *smallest* numbers. 
 - Sort the list first.
 - For every query in ```queries```, find out how many elements can be added by iterating over the array ```nums```.
-- Complexity: $ O(m \cdot n) $
+- Complexity: $O(m \cdot n)$
 #### 💻 Code Implementation:
 ```
 class Solution(object):
@@ -56,7 +56,7 @@ class Solution(object):
 - Sort the list first. 
 - Keep a ```prefix_sum``` array that has this interpretation: `i`th index stores the sum of first `i` smallest elements. Note that this array will be sorted.
 - For each ```queries[i]```, use binary search on `prefix_sum` to find out the largest element less than equal to ```queries[i]```
-- Complexity: $O(n \cdot log(n))$
+- Complexity: $O(n \cdot \log(n))$
 #### 💻 Code Implementation:
 ```
 class Solution:
@@ -107,7 +107,7 @@ In this test case, the number $1$ occurs thrice, the number $2$ occurs twice, an
 - For every unique element from the `nums` array, create a new 2D array where each element is of the format: `[element from nums, it's count]`
 - Sort this array based on the counts in descending order. 
 - Pick the first ```k``` elements.
-- Complexity: $O(m \cdot log(m))$, where $m$ is the number of unique elements in ```nums```.
+- Complexity: $O(m \cdot \log(m))$, where $m$ is the number of unique elements in ```nums```.
 #### 💻 Code Implementation:
 ```
 class Solution:
@@ -141,7 +141,7 @@ class Solution:
 This problem is similar to what is discussed in one the practice programming assignments for this week, and we need to solve this problem in $O(n)$ complexity. 
 
 ### 3.1 Sort the ```nums``` in place
-We can simply sort the array ```nums``` in place are return it. We can use ```nums.sort()``` for this. But the comlpexity for this will be: $O(n \cdot log (n))$. Can we do better?
+We can simply sort the array ```nums``` in place are return it. We can use ```nums.sort()``` for this. But the comlpexity for this will be: $O(n \cdot \log (n))$. Can we do better?
 
 ### 3.2 Take Count of Colors 
 We know that there are only three distinct elements in the list. So can we count the occurrences for each distinct color element, and then replace the original array using these counts. 
@@ -153,6 +153,8 @@ counts[2] = 2
 ```
 
 Then for every color, we can replace ```nums[i]``` to ```nums[i + count]``` with the color.
+
+Time Complexity: $O(n)$
 
 #### 💻 Code Implementation:
 ```
@@ -215,6 +217,8 @@ The last interval ```[5, 10]``` doesn't overlap with any previous intervals so w
 
 We also need to keep track of the start and the end of the merged intervals.
 
+Time Complexity: $O(n \cdot \log(n))$
+
 #### 💻 Code Implementation:
 ```
 class Solution:
@@ -255,7 +259,7 @@ This is a simple search problem, so the test cases are not discussed.
 
 📚 **Problem Overview:**
 
-We need to find the element in $log(n)$ time. When you see $log(n)$, what do you think of? Of course, Binary search! This question has been asked in PYQs, so better to understand it well.
+We need to find the element in $\log(n)$ time. When you see $\log(n)$, what do you think of? Of course, Binary search! This question has been asked in PYQs, so better to understand it well.
 
 **💡 The Solution:**
 1. At any `mid` index, there are two possibilities: either the *left half* of the array is sorted, or the *right half* is.
@@ -316,7 +320,7 @@ We need to find the starting and ending indices of the target number 8. In this 
 
 📚 **Problem Overview:**
 
-Again, we need a $log(n)$ solution. So, we think Binary Search to come up with a solution. 
+Again, we need a $\log(n)$ solution. So, we think Binary Search to come up with a solution. 
 
 **💡 The Solution:**
 

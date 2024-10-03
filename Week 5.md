@@ -102,13 +102,6 @@ class Solution:
 
 ## 2. [Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/description/)
 
-**🎯 Understanding the Test Cases:**
-
-*Test Case 1:*
-
-*Explanation:*
-
-
 ### 2.1 Using Dijkstra
 
 ### 📚 Problem Overview:
@@ -119,14 +112,11 @@ We need to find the *maximum probability* of getting from a `start_node` to an `
 
 It’s similar to finding the shortest path, but here we are finding the *path with the highest probability*!
 
-1. *Create a Graph:*
-   - We create an adjacency list where each node is connected to its neighbors with the probability of success for each edge.
+- We create an adjacency list where each node is connected to its neighbors with the probability of success for each edge.
 
-2. *Max-Heap*:
-   - To keep track of the most promising path, we use a *max-heap*. But since Python’s `heapq` is a *min-heap*, we store *negative probabilities* (because minimizing negatives is same as maximizing positives).
+- *Max-Heap*: To keep track of the most promising path, we can use a *max-heap*. But since Python’s `heapq` is a *min-heap*, we store *negative probabilities* (because minimizing negatives is same as maximizing positives).
 
-3. *Dijkstra’s Algorithm*:
-   - We run *Dijkstra’s algorithm*, but instead of minimizing distance, we maximize probability. Stop as soon as we reach the `end_node`.
+- We can run *Dijkstra’s algorithm*, but instead of minimizing distance, we maximize probability. We stop as soon as we reach the `end_node`.
 
 If we never reach the end node, we return `0.0` because there's no valid path! 
 
@@ -170,12 +160,6 @@ class Solution:
 
 
 ## 3. [Cheapest Flight Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/description/)
-
-**🎯 Understanding the Test Cases:**
-
-*Test Case 1:*
-
-*Explanation:*
 
 ### 3.1 Using Dijkstra
 
